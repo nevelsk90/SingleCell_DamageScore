@@ -2,7 +2,11 @@
 # an input for each figure should be a data, 
 # which requires no significant computations for plotting
 
+# release memory
+mallinfo::malloc.trim()
+
 #### load DS and code ####
+.libPaths(c("/home/tim_nevelsk/R/x86_64-pc-linux-gnu-library/4.0", "/media/tim_nevelsk/WD_tim/SOFT/R"))
 options( connectionObserver = NULL )
 library( org.Mm.eg.db )
 library( ggplot2 )
@@ -17,41 +21,33 @@ library( ggpubr )
 library( biomaRt )
 library( RColorBrewer )
 
+# setwd
+setwd( "/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure1" )
+inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+
 # load necessary code
 source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
 source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 
 # load damage signatures
 DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+# load expression data
+listSCSN.1K <- readRDS( paste0( inputdir, "/listSCSN_1K.22.12.23.rda") )
 
-setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure1")
 
-
-#### 1. Main Fig A) Scheme of the damage score pipeline, made in inkscape ####
+#### 1. Scheme of the damage score pipeline, made in inkscape ####
 
 #### 2. Dim.Red. plots showing PDS gradient in the population of damaged podocytes ####
-### Main fig B) UMAP of podocyte colored by PDS, from Wt1het.del snRNAseq study
+### UMAP of podocyte colored by PDS, from Wt1het.del snRNAseq study
   {
-    Wt1hd_filt.podo  <- readRDS(  file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/snRNAseq.WT1hetdel_decontX.podo_Seur.4w12wlist.scDblFilt.rda")
-    Wt1hd_filt.podo <- Wt1hd_filt.podo[[2]]
+    toPlot <- listSCSN.1K$Wt1
     
-    ### calcualte PDS
-    Wt1hd_filt.podo <- subset( Wt1hd_filt.podo , downsample=2000)
-    expMat.podo <- Wt1hd_filt.podo@assays$RNA@counts
-    expMat.podo  <- expMat.podo[ rowSums( round(expMat.podo)>0)> 
-                                   0.01* ncol(expMat.podo) ,]
-    
-    set.seed(42)
-    Wt1hd_filt.podo$PDS.42 <- DS_calc.func( exprMatrices = expMat.podo,
-                                            ceilThrsh = 0.05 ,
-                                            DSignature = DS_all , 
-                                            ntop = 42, wghtd = T, progStat = T)
-      
-    gg1 <- FeaturePlot( Wt1hd_filt.podo, features = "PDS.42", 
-                        cells = sample(colnames(Wt1hd_filt.podo)),
+   gg1 <- FeaturePlot( toPlot , features = "PDS", 
+                        cells = sample(colnames(toPlot)),
                         cols = brewer.pal( n = 9 , name = "YlOrBr"),
                        pt.size =1.5)+ 
-      theme(legend.position = "bottom",
+      theme(legend.position = "bottom", 
+            legend.key.height=unit(5,"mm"),
             text = element_text(size=20),
             axis.title=element_blank(),
             axis.text=element_blank(),
@@ -59,27 +55,21 @@ setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure
       # coord_cartesian(xlim = c(-10,-6), ylim = c(-2,3))+
       # theme(legend.position = "none")
     
-    gg2 <- DimPlot( Wt1hd_filt.podo, group.by = "gtype",
+    gg2 <- DimPlot( toPlot , group.by = "gtype",
                    pt.size = 1.5 , shuffle = T)+
       # coord_cartesian(xlim = c(-10,-6), ylim = c(-2,3))+
       scale_colour_colorblind()+
       theme(legend.position = "bottom",
+            legend.key.height=unit(15,"mm"),
             text = element_text(size=20),
             axis.title=element_blank(),
             axis.text=element_blank(),
             axis.ticks=element_blank())
-    ggpnl <-cowplot::plot_grid(gg2, gg1, rel_heights = c(1,1.2))
-    
-    pdf(height = 5, width = 8, file = "Wt1hd.snRNAseq_podo_PDS.umap.NOdim.pdf")
-     ggpnl
-    dev.off()
-    png(height = 400, width = 600, file = "Wt1hd.snRNAseq_podo_PDS.umap.NOdim.png")
-    ggpnl
-    dev.off()
+   
     
     ## densito plot for PDS
-    gg3 <- ggplot(data=Wt1hd_filt.podo@meta.data,
-                  aes( x=PDS.42, color=gtype))+
+    gg3 <- ggplot(data=toPlot@meta.data,
+                  aes( x=PDS, color=gtype))+
       geom_density(lwd=3)+ theme_bw()+
       scale_colour_colorblind()+
       theme(legend.position = "none",
@@ -88,13 +78,20 @@ setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure
             axis.ticks.y=element_blank(),
             text = element_text(size=20))
     
-    pdf(height = 3, width = 5, file = "Wt1hd.snRNAseq_podo_PDS.density.pdf")
-    gg3
+    ggpnl <-cowplot::plot_grid(plotlist = list(gg2, gg1, gg3), 
+                               rel_heights = c(1,0.25), nrow = 2)
+    
+    
+    pdf(height = 6, width = 8, file = "Wt1hd.snRNAseq_podo_PDS.umap.NOdim.pdf")
+    ggpnl
     dev.off()
+    png(height = 600, width = 600, file = "Wt1hd.snRNAseq_podo_PDS.umap.NOdim.png")
+    ggpnl
+    dev.off() 
   }
 
-#### 3. model cross validation plot ####
-### Main fig. C)
+#### 3. model cross validation plots ####
+###  Disease-model leave-one out cross-validation
   {
   CV_model.list_PDS42.agg <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
   
@@ -123,12 +120,12 @@ setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure
   })
   ppglist <- cowplot::plot_grid( plotlist = ppglist, ncol = 1)
   
-  pdf( height = 20, width = 20, file = "Supplementary/Supl.Fig1/PDS_cv.models_boxplot_Indv.pdf" )
+  pdf( height = 20, width = 20, file = "Supl.Fig1/PDS_cv.models_boxplot_Indv.pdf" )
   print( ppglist )
   dev.off()
-  # png( height = 1800, width = 1500, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_Indv.png" )
-  # print( ppglist )
-  # dev.off()
+  png( height = 1800, width = 1500, file = "Supl.Fig1/PDS_cv.models_boxplot_Indv.png" )
+  print( ppglist )
+  dev.off()
   
   ### make one plot for all models
   toPlot <- Reduce( rbind, lapply(seq(toPlot.list), function(ii){
@@ -156,12 +153,103 @@ setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure
   # dev.off()
   }
 
+### Suppl fig. platform CV leave-one out cross-validation
+### Suppl fig. DS randomisation test
+### Suppl fig. sling unsupervised sc/sn trajectory
+  {  
+  library( scater )
+  library(slingshot)
+  
+  sce.sling <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.1K_sling.ptime_sce.rda" )
+  
+  embedded <- embedCurves(sce.sling, "UMAP.CCA")
+  embedded <- slingCurves(embedded)[[1]] # only 1 path.
+  embedded <- data.frame(embedded$s[embedded$ord,])
+  
+  # plot with pseudotime
+  gg1 <- plotReducedDim( sce.sling, colour_by=("slingPseudotime_1"),
+                   dimred = "UMAP.CCA") + ggtitle( "trajectory ptime" ) +
+    geom_path( data=embedded, aes( x=umapcca_1, y=umapcca_2), size = 1.2 )+
+    theme( text = element_text( size =24) , legend.position = "bottom")
+  # xlim(-13,-8)
+  # plot with PDS
+  gg2 <-plotReducedDim( sce_clust_SCE , colour_by=("PDS"),
+                  dimred= "UMAP.CCA" ) + ggtitle("aucell.42 PDS")+
+    theme( text = element_text( size =24) , legend.position = "bottom")
+  # plot conditions
+  gg0 <-  plotReducedDim( sce_clust_SCE , colour_by=("gtypeDE") ,
+                    text_by= "groupSling" , text_colour="red" , text_size = 8,
+                    dimred = "UMAP.CCA" ) + 
+    ggtitle( "experimental conditions" )+
+    theme( text = element_text( size =24), legend.position = "bottom")
+    # xlim(-13,-8)+ggtitle("Wt1het.del. podocytes")
+  ggl <- cowplot::plot_grid( gg0 , gg1 , gg2 , nrow = 1 )
+  
+  # save plots
+  pdf(height = 6, width = 15, file = "Supl.Fig1/listSCSN.1K_sling.ptimeDE_dimRed.pdf")
+    ggl
+  dev.off()
+  png(height = 600, width = 1500, file = "Supl.Fig1/listSCSN.1K_sling.ptimeDE_dimRed.png")
+    ggl
+  dev.off() 
+  
+  ### DE along the trajectory
+  pseudo <- TSCAN::testPseudotime( sce.sling, 
+                            pseudotime=sce.sling$slingPseudotime_1)
+  pseudo$Gene.Symbol <- rownames( pseudo)
+  pseudo <- pseudo[order(pseudo$p.value),]
+  colnames(pseudo)[1:2] <-  c("log2FoldChange", "pvalue" )
+  
+  saveRDS( pseudo, file = "listSCSN.1K_sling.ptimeDE.rda")
+  
+}
+### Suppl fig. DE LFC heatmap of damage markers
+  {
+  ### load DE results
+  FSGS_MA_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/MA_DElist.04.04.22.rda")
+  FSGS_bulk_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/bulk_DElist.04.04.22.rda")
+  FSGS_sc_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/sc_DElist.04.04.22.rda")
+  
+  names(FSGS_sc_DE) <- paste0(c("Coq2","Pdss2","GSE127235" ,"GSE139506",
+                                "btbr", "cd2ap" ,"doxo", "nephr.D1", "nephr.D5", 
+                                "GSE164273","GSE174013","GSE174102", "Nphs2","Wt1" ),"_sc")
+  DE_list <- c( FSGS_MA_DE , FSGS_bulk_DE , FSGS_sc_DE)
+  
+  DEall_LFC <- Reduce( cbind , lapply( seq(DE_list), function(ii){
+    # select 50 genes and column with LFC values
+    X <- DE_list[[ii]]
+    X$log2FoldChange[!is.finite(X$log2FoldChange)] <- max(X$log2FoldChange[is.finite(X$log2FoldChange)])
+    X$log2FoldChange <- scale( X$log2FoldChange, center = F )
+    X <- X[ match( DS_all.42$gene_symbol , 
+                   X$Gene.Symbol ) , "log2FoldChange" ]
+    return(X)
+  }))
+  colnames (DEall_LFC ) <- names(DE_list)
+  rownames( DEall_LFC ) <- DS_all.42$gene_symbol
+  
+  # tame LFC outliers
+  toPlot <- DEall_LFC
+  toPlot[toPlot< -3] <- -3
+  toPlot[toPlot> 3] <- 3
+  # chose color scheme
+  paletteLength <- 20
+  myColor <-  colorspace::divergingx_hcl(palette = 'RdBu', 
+                                         rev = T, n=20)
+  #  save plots 
+  library(viridis)
+  setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise")
+  heatmaply::heatmaply(toPlot, colors =myColor , na.value	=  "grey25", 
+                       file = c("heatmaply_plot.pdf", "heatmaply_plot.png"),
+                       width=1500, height= 1000)
+  
+}
+
+
 #### 4. validate PDS in mouse spatial transcriptomics #### 
 ### read glom coordinates
 TimGlom_coord <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/TimGlom_coord.rda" )
 
-### Main fig. D)
-### Spatial plot
+### GSM5713367 Spatial plot, with glom morphology and PDS
   {
     
     ### read glom coordinates
@@ -188,18 +276,27 @@ TimGlom_coord <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.
     
    
     # spatial plot of Slide'seq.v2 data from kidney-tissue slice
-    pp<- SpatialDimPlot(seur, group.by = "glom.KNN",stroke = 0.1)+scale_fill_colorblind()
-    
+    pp<- SpatialDimPlot(seur, group.by = "glom.KNN",stroke = 0.1)+
+      scale_fill_colorblind()+ theme( text = element_text( size=16))
+
     # plot circles coloured by PDS
-    cc <- ggplot(toPlot, aes(x0=x, y0=y, r=radii, color=PDS, fill=PDS)) + 
-      geom_circle(alpha=0.4) + coord_equal() + theme_classic()+
-      easy_remove_axes()+
+    cc <- ggplot(toPlot, aes(x0=y, y0=x, r=radii, color=PDS, fill=PDS)) + 
+      geom_circle(alpha=0.4) + coord_equal() + 
+      ggeasy::easy_remove_axes()+theme_void()+  
+      theme( text = element_text( size=16))+
+      theme( legend.position = "bottom") +  scale_y_reverse() +
       scale_color_gradientn( colours = brewer.pal( n = 9 , name = "YlOrBr"))+
-      scale_fill_gradientn( colours = brewer.pal( n = 9 , name = "YlOrBr"))+
+      scale_fill_gradientn( colours = brewer.pal( n = 9 , name = "YlOrBr"))
     
       # combine on 2 panels, merge panels in the illustrator
-      pp+cc
-  
+   ppl  <- cowplot::plot_grid( cc, pp , rel_heights = c(1, 1), rows = 2)
+      
+   
+   # save plots
+   pdf(height = 15, width = 15, file = "Dimplot_glom.PDS_GSM5713367.pdf")
+    ppl
+   dev.off()
+   
   }
 
 ### Suppl fig. D)
