@@ -45,28 +45,29 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
 ### PDS vs Proteinura in KFO snRNAseq datasets
   {
     # read expression data
-    listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
-    listSCSN.1K.sampl <- lapply( seq( listSCSN ), function(ii)
-      {
-      print(ii)
-      # if( names(listSCSN)[ii]=="Nphs2") {
-      #   newSeu <- subset( listSCSN[[ii]] , subset= sample %in% c(
-      #     "140739", "140738", "140740", "140741", "139919",
-      #     "139917", "139921", "139913", "139915", "139911" ))
-      # } else 
-      newSeu <- listSCSN[[ii]]
-      
-      
-      # balance samples
-      Idents(newSeu)<- newSeu$sample
-      newSeu <- subset( newSeu , downsample=1000 )
-      
-      return(newSeu)
-    })
-    names(listSCSN.1K.sampl ) <- names(listSCSN)
-    saveRDS(listSCSN.1K.sampl , "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
-    
-    
+    # listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
+    # listSCSN.1K.sampl <- lapply( seq( listSCSN ), function(ii)
+    #   {
+    #   print(ii)
+    #   # if( names(listSCSN)[ii]=="Nphs2") {
+    #   #   newSeu <- subset( listSCSN[[ii]] , subset= sample %in% c(
+    #   #     "140739", "140738", "140740", "140741", "139919",
+    #   #     "139917", "139921", "139913", "139915", "139911" ))
+    #   # } else
+    #   newSeu <- listSCSN[[ii]]
+    # 
+    # 
+    #   # balance samples
+    #   Idents(newSeu)<- newSeu$sample
+    #   newSeu <- subset( newSeu , downsample=1000 )
+    # 
+    #   return(newSeu)
+    # })
+    # names(listSCSN.1K.sampl ) <- names(listSCSN)
+    # saveRDS(listSCSN.1K.sampl , "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+    listSCSN.1K.sampl <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+    names(listSCSN.1K.sampl) <- c( "Nphs2", "Wt1", "Pdss2", "Lmx1b", "btbr", 
+                                   "cd2ap", "doxo", "nephr.D1", "nephr.D5" ) 
     # laod annotation
     annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
     annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
@@ -74,10 +75,12 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     # combine metadata from 3 experiments 
     datt <- Reduce( rbind , lapply( seq(listSCSN.1K.sampl), function(ii) {
       XX <- listSCSN.1K.sampl[[ii]]@meta.data 
-      XX <- XX[,c( "group","sample","gtype", "PDS")]
+      XX <- XX[,c( "group","sample","gtype", "PDS" )]
       XX$dataSet <- names(listSCSN.1K.sampl)[ii]
       return(XX)
     }))
+    
+    
     
     # treat carefully 21 week Pdss2 samples since they have only per group measurements
     datt1 <- datt[ datt$sample %in% c( "146985", "146986", "143485" , "143486") ,]
@@ -95,7 +98,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     # combine all samples
     aggPDS <- rbind(aggPDS2, aggPDS1)
     
-    aggPDS$AlbCrRatio <- annot_tab$AlbCrRatio[ 
+    aggPDS$AlbCrRatio <- annot_tab$AlbCrRatio_v2[ 
       match( sub("SID","" ,aggPDS$sample) , annot_tab$CCG_Sample_ID)]
     aggPDS$group <- annot_tab$group[ 
       match( sub("SID","" ,aggPDS$sample ), annot_tab$CCG_Sample_ID)]
@@ -106,12 +109,16 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     # PDSvec <- grep("PDS",names(datt1), value = T)
     aggPDS <- aggPDS[ !is.na(aggPDS$AlbCrRatio),]
     aggPDS$dataSet <- datt$dataSet[ match( aggPDS$sample, datt$sample )]
-    
 
+    aggPDS <- aggPDS[aggPDS$dataSet!="Lmx1b",]
     # plot lm and correlation
     gg1 <- ggplot2::ggplot( data = aggPDS, aes( 
-      x = aggPDS[,PDSvec[ii]], y = log10(AlbCrRatio) ) ) +
-      geom_point(  size=6, aes(col=dataSet, shape=gtypeDE)) +
+      x = aggPDS[,"PDS"], 
+      y = log10(AlbCrRatio) ) ) +
+      geom_point(  size=6, 
+                   aes(col=gtypeDE, 
+                       shape=dataSet)) +
+      scale_color_colorblind()+
       theme_bw() +  theme( text = element_text(size = 22)) + 
       geom_smooth( method='lm', color="black", se = FALSE) + 
       ggtitle( "snRNAseq KFO data" ) + xlab("aggregated PDS")+
@@ -119,10 +126,10 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     # geom_text(aes(label = sample  ), size=6, position = "dodge")
     
     
-    pdf(height = 4, width = 7, file = "PDS42vsAlbCr_KFO.scatter.pdf")
+    pdf(height = 4, width = 7, file = "PDS42vsAlbCr_KFO.scatter.v2.pdf")
       gg1
     dev.off()
-    png(height = 300, width = 600, file = "PDS42vsAlbCr_KFO.scatter.png")
+    png(height = 300, width = 600, file = "PDS42vsAlbCr_KFO.scatter.v2.png")
       gg1
     dev.off() 
   }
@@ -197,7 +204,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     match( sub("SID","" ,aggPDS$sample ) , annot_tab$CCG_Sample_ID)])
   aggPDS$gtypeDE <- ifelse( aggPDS$gtype=="wt" , "control", "experimental")
   
-  # PDSvec <- grep("PDS",names(datt1), value = T)
+  PDSvec <- grep("PDS",names(datt1), value = T)
   aggPDS <- aggPDS[ !is.na(aggPDS$AlbCrRatio),]
   aggPDS$dataSet <- datt$dataSet[ match( aggPDS$sample, datt$sample )]
   
@@ -365,6 +372,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
                                         use = "pairwise.complete.obs" , adjust = "none")
       # make a plot
       corrplot::corrplot(corMat.test$r,order="hclust", 
+                         # col= colorRampPalette(
                          # type = "lower",
                          col= rev(COL2('RdBu', 200)),
                          tl.col = "black",

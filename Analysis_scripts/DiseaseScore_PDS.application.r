@@ -217,7 +217,7 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
         genecorrPDS.Sprmn_r.cntrd <- apply( genecorrPDS.Sprmn_r, 2, scale, scale = F)
         rownames(genecorrPDS.Sprmn_r.cntrd) <- rownames(genecorrPDS.Sprmn_r)
     
-        
+        saveRDS( genecorrPDS.Sprmn_r.cntrd , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
         # # group all controls and all exprmntl smpls
         # genecorrPDS.Sprmn_qval <- genecorrPDS.Sprmn_qval[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
         # genecorrPDS.Sprmn_p <- genecorrPDS.Sprmn_p[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
@@ -1989,18 +1989,23 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
   
 ### smooth expr./activity curves
   {
+    TFlist <- c( "Klf4", "Notch1", "Foxc1", "Foxc2", "Wt1", "Mafb", "Tcf21", "Lmx1b" )
+    
     PAaucell_TFs<- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PathwayActivity/PAaucell_list.TFs.rda")
-    listSCSN.PDS_1K <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDSlimit.1K.Test.rda")
+    # listSCSN.PDS_1K <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDSlimit.1K.Test.rda")
+    listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+    TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFs_SNSC.podo.MeanMed.08.01.24.rda")
     
     ## calculate smoothed activity profile of mRNA lvls and make a DF for plotting
-    geneExpr_loess.1K <- Reduce( rbind , lapply( seq( listSCSN.PDS_1K) , 
-                                                 function(ii, datt= listSCSN.PDS_1K, 
-                                                          ggenes = TF_MeanMed, 
-                                                          sspan=1, scale.arg=F )
+    iids <- c(1:6,8)
+    geneExpr_loess.1K <- Reduce( rbind , lapply( iids , 
+                                                 function(ii, datt= listSCSN.1K.sampl , 
+                                                          ggenes = TFlist[ TFlist%in%TF_MeanMed], 
+                                                          sspan=0.3, scale.arg=F )
                                                  {
                                                    print(ii)
                                                    ## select TFs and order cells by PDS
-                                                   expr <- datt[[ii]]@assays$RNA@data
+                                                     expr <- datt[[ii]]@assays$RNA@data
                                                    expr <- expr [ match( ggenes , rownames( expr ) ) ,  ]
                                                    
                                                    expr[is.na(expr)]<- 0
@@ -2020,15 +2025,15 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
                                                    
                                                    if( isTRUE(scale.arg)){
                                                      # scale
-                                                     datt.wt <- scale( t( expr[, col.wt] ), center = F )
+                                                     datt.wt <- scale( t( as.matrix(expr[, col.wt] )), center = F )
                                                      datt.wt[is.na(datt.wt)]<- 0
                                                      
-                                                     datt.mut <- scale( t( expr[, col.mut] ) , center = F)
+                                                     datt.mut <- scale( t( as.matrix(expr[, col.mut] )) , center = F)
                                                      datt.mut[is.na(datt.mut)]<- 0
                                                    } else{
-                                                     datt.wt <- t( expr[, col.wt] )
+                                                     datt.wt <- t( as.matrix(expr[, col.wt] ))
                                                      
-                                                     datt.mut <- t( expr[, col.mut] )
+                                                     datt.mut <- t( as.matrix(expr[, col.mut] ))
                                                    }
                                                    
                                                    
@@ -2091,332 +2096,26 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
                                                    # combine wt and mut
                                                    toPlot<- cbind( gtypeDE= c( rep( "control", nrow(loessRes.wt) ), 
                                                                                rep( "experiment", nrow(loessRes.mut) )),
-                                                                   dataSet=names(listSCSN.PDS_1K)[ii] , 
+                                                                   dataSet=names(datt)[ii] , 
                                                                    rbind( loessRes.wt , loessRes.mut) )
                                                    return( toPlot )
                                                  }) )
     
-    saveRDS(TFmRNA_loess.1K, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFmRNA_PDS42_loess1.RDS")
+    # saveRDS(TFmRNA_loess.1K, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFmRNA_PDS42_loess1.RDS")
+    
     # melt for plotting
     geneExpr_loess.1K.melt <- reshape2::melt( geneExpr_loess.1K ,
                                               id=c("gtypeDE", "dataSet","sample", "response", "rType"))
     colnames( geneExpr_loess.1K.melt )[ colnames(geneExpr_loess.1K.melt)=="value" ] <- "predicted"
     
-    ## calculate smoothed activity profile of mRNA lvls and make a DF for plotting
-    TFmRNA_loess.1K <- Reduce( rbind , lapply( seq( listSCSN.PDS_1K) , 
-                                               function(ii, datt= listSCSN.PDS_1K, 
-                                                        sspan=1, scale.arg=F )
-                                               {
-                                                 print(ii)
-                                                 ## select TFs and order cells by PDS
-                                                 expr <- datt[[ii]]@assays$RNA@data
-                                                 expr <- expr [ match( colnames(ATACseq_tgenesM.podo) , rownames( expr ) ) ,  ]
-                                                 
-                                                 expr[is.na(expr)]<- 0
-                                                 rownames( expr) <- colnames(ATACseq_tgenesM.podo)
-                                                 ## separate wt and mut cells and  limit to span -0.5 to 0 PDS
-                                                 # balance groups
-                                                 col.wt <- intersect( names(  which(datt[[ii]]$gtypeDE=="control") )  ,
-                                                                      names( which( datt[[ii]]$PDS.42 < - 0.2  &
-                                                                                      datt[[ii]]$PDS.42 > -0.45 ) ) )
-                                                 
-                                                 col.mut <- intersect( names( which(datt[[ii]]$gtypeDE!="control") ) ,
-                                                                       names( which( datt[[ii]]$PDS.42 <  0 &
-                                                                                       datt[[ii]]$PDS.42 > -0.45 ) ) )
-                                                 #                  
-                                                 print( length( col.wt))
-                                                 print( length( col.mut))
-                                                 
-                                                 if( isTRUE(scale.arg)){
-                                                   # scale
-                                                   datt.wt <- scale( t( expr[, col.wt] ), center = F )
-                                                   datt.wt[is.na(datt.wt)]<- 0
-                                                   
-                                                   datt.mut <- scale( t( expr[, col.mut] ) , center = F)
-                                                   datt.mut[is.na(datt.mut)]<- 0
-                                                 } else{
-                                                   datt.wt <- t( expr[, col.wt] )
-                                                   
-                                                   datt.mut <- t( expr[, col.mut] )
-                                                 }
-                                                 
-                                                 
-                                                 
-                                                 # add damage scores
-                                                 datt.wt <- cbind.data.frame(  
-                                                   PDS.42= datt[[ii]]$PDS.42[col.wt],
-                                                   lasso.scKFO= datt[[ii]]$lasso.scKFO[col.wt],
-                                                   (datt.wt) )
-                                                 datt.mut <- cbind.data.frame( 
-                                                   PDS.42= datt[[ii]]$PDS.42[col.mut],
-                                                   lasso.scKFO= datt[[ii]]$lasso.scKFO[col.mut],
-                                                   (datt.mut)  )
-                                                 
-                                                 
-                                                 # # add index
-                                                 datt.wt <- cbind.data.frame( index=seq(nrow(datt.wt)) , datt.wt)
-                                                 datt.mut <- cbind.data.frame( index=seq(nrow(datt.mut)) , datt.mut)
-                                                 
-                                                 # smoothen
-                                                 loessRes.wt <- Reduce( cbind, lapply( (ncol(datt.wt)-76):ncol(datt.wt) ,
-                                                                                       function(jj){
-                                                                                         # print(jj)
-                                                                                         
-                                                                                         loessMod1 <- loess(  datt.wt[,jj] ~ datt.wt[,"index"], data = datt.wt, span = sspan)
-                                                                                         loessMod2 <- loess( datt.wt[,jj] ~ datt.wt[,"PDS.42"], data = datt.wt, span = sspan)
-                                                                                         loessMod3 <- loess( datt.wt[,jj] ~ datt.wt[,"lasso.scKFO"], data = datt.wt, span = sspan)
-                                                                                         
-                                                                                         smoothed <- c(  range01(predict(loessMod1)),
-                                                                                                         range01(predict(loessMod2)) ,
-                                                                                                         range01(predict(loessMod3)) )
-                                                                                       }))
-                                                 
-                                                 loessRes.mut <- Reduce( cbind , lapply( (ncol(datt.mut)-76):ncol(datt.mut),
-                                                                                         function(jj){
-                                                                                           # print(jj)
-                                                                                           loessMod1 <- loess( datt.mut[,jj] ~ datt.mut[,"index"], data = datt.mut, span = sspan)
-                                                                                           loessMod2 <- loess( datt.mut[,jj] ~ datt.mut[,"PDS.42"], data = datt.mut, span = sspan)
-                                                                                           loessMod3 <- loess( datt.mut[,jj] ~ datt.mut[,"lasso.scKFO"], data = datt.mut, span = sspan)
-                                                                                           
-                                                                                           smoothed <- c( range01( predict(loessMod1)),
-                                                                                                          range01( predict(loessMod2)) ,
-                                                                                                          range01(predict(loessMod3)) )
-                                                                                         }) )
-                                                 
-                                                 # ad feature names
-                                                 colnames(loessRes.wt ) <-   colnames(loessRes.mut ) <- colnames( ATACseq_tgenesM.podo)
-                                                 
-                                                 # combine with metadata
-                                                 loessRes.wt <- cbind.data.frame( 
-                                                   sample= datt[[ii]]$sample[col.wt],
-                                                   response= c( datt.wt[,"index"] ,
-                                                                datt.wt[,"PDS.42"], 
-                                                                datt.wt[,"lasso.scKFO"] ) ,
-                                                   rType = c( rep("index",nrow(datt.wt)),
-                                                              rep("PDS.42",nrow(datt.wt)), 
-                                                              rep("lasso.scKFO",nrow(datt.wt))) ,
-                                                   loessRes.wt)
-                                                 
-                                                 loessRes.mut <- cbind.data.frame( 
-                                                   sample= datt[[ii]]$sample[col.mut],
-                                                   response= c( datt.mut[,"index"] ,
-                                                                datt.mut[,"PDS.42"], 
-                                                                datt.mut[,"lasso.scKFO"] ) ,
-                                                   rType = c( rep("index",nrow(datt.mut)),
-                                                              rep("PDS.42",nrow(datt.mut)), 
-                                                              rep("lasso.scKFO",nrow(datt.mut))) ,
-                                                   loessRes.mut)
-                                                 
-                                                 # combine wt and mut
-                                                 toPlot<- cbind( gtypeDE= c( rep( "control", nrow(loessRes.wt) ), 
-                                                                             rep( "experiment", nrow(loessRes.mut) )),
-                                                                 dataSet=names(listSCSN.PDS_1K)[ii] , 
-                                                                 rbind( loessRes.wt , loessRes.mut) )
-                                                 return( toPlot )
-                                               }) )
-    
-    saveRDS(TFmRNA_loess.1K, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFmRNA_PDS42_loess1.RDS")
-    # melt for plotting
-    TFmRNA_loess.1K.melt <- reshape2::melt( TFmRNA_loess.1K ,
-                                            id=c("gtypeDE", "dataSet","sample", "response", "rType"))
-    colnames( TFmRNA_loess.1K.melt )[ colnames(TFmRNA_loess.1K.melt)=="value" ] <- "predicted"
-    
-    
- 
-    ### AUCell
-    TFmRNA_loess.AUCell <- lapply( seq( listSCSN.PDS_1K) , 
-                                   function(ii, datt= PAaucell_TFs , sspan=1)
-                                   {
-                                     print(ii)
-                                     
-                                     ## select TFs and order cells by PDS
-                                     expr <- t( datt[[ii]] )
-                                     expr[is.na(expr)]<- 0
-                                     
-                                     
-                                     ## separate wt and mut cells and  limit to span -0.5 to 0 PDS
-                                     col.wt <- intersect( names( which(listSCSN.PDS_1K[[ii]]$gtypeDE=="control")),
-                                                          names( which( listSCSN.PDS_1K[[ii]]$PDS.42 < -0.2 &
-                                                                          listSCSN.PDS_1K[[ii]]$PDS.42 > -0.45 ) ) )
-                                     
-                                     col.mut <- intersect( names( which(listSCSN.PDS_1K[[ii]]$gtypeDE!="control")),
-                                                           names( which( listSCSN.PDS_1K[[ii]]$PDS.42 < 0 &
-                                                                           listSCSN.PDS_1K[[ii]]$PDS.42 > -0.45 ) ) )
-                                     
-                                     
-                                     # combine activitiws and damage scores
-                                     datt.wt <- cbind.data.frame( PDS.42= listSCSN.PDS_1K[[ii]]$PDS.42[col.wt],
-                                                                  lasso.scKFO= listSCSN.PDS_1K[[ii]]$lasso.scKFO[col.wt],
-                                                                  expr[ col.wt , ] )
-                                     datt.mut <- cbind.data.frame( PDS.42= listSCSN.PDS_1K[[ii]]$PDS.42[col.mut],
-                                                                   lasso.scKFO= listSCSN.PDS_1K[[ii]]$lasso.scKFO[col.mut],
-                                                                   expr[ col.mut , ]   )
-                                     
-                                     # # aggregate before smoothing
-                                     # # set smoothing factors
-                                     # WsizeF=10
-                                     # WstepF=30
-                                     # datt.wt <- as.data.frame( apply( (datt.wt), 2 ,  function(X){
-                                     #   slideFunct(X, window = length(X)/WsizeF , step = length(X)/WstepF ) }))
-                                     # datt.mut <- as.data.frame(  apply( (datt.mut), 2 ,  function(X){
-                                     #   slideFunct(X, window = length(X)/WsizeF , step = length(X)/WstepF ) }))
-                                     
-                                     # add index
-                                     datt.wt <- cbind.data.frame( index=seq(nrow(datt.wt)) , datt.wt[ order(datt.wt$PDS.42),])
-                                     datt.mut <- cbind.data.frame( index=seq(nrow(datt.mut)) , datt.mut[ order(datt.mut$PDS.42),])
-                                     
-                                     # smoothen
-                                     loessRes.wt <- Reduce( cbind, lapply( (ncol(datt.wt)-76):ncol(datt.wt) ,
-                                                                           function(jj){
-                                                                             # print(jj)
-                                                                             
-                                                                             loessMod1 <- loess(  datt.wt[,jj] ~ datt.wt[,"index"], data = datt.wt, span = sspan)
-                                                                             loessMod2 <- loess( datt.wt[,jj] ~ datt.wt[,"PDS.42"], data = datt.wt, span = sspan)
-                                                                             loessMod3 <- loess( datt.wt[,jj] ~ datt.wt[,"lasso.scKFO"], data = datt.wt, span = sspan)
-                                                                             
-                                                                             smoothed <- c(  range01(predict(loessMod1)),
-                                                                                             range01(predict(loessMod2)) ,
-                                                                                             range01(predict(loessMod3)) )
-                                                                           }))
-                                     
-                                     loessRes.mut <- Reduce( cbind , lapply( (ncol(datt.mut)-76):ncol(datt.mut),
-                                                                             function(jj){
-                                                                               # print(jj)
-                                                                               loessMod1 <- loess( datt.mut[,jj] ~ datt.mut[,"index"], data = datt.mut, span = sspan)
-                                                                               loessMod2 <- loess( datt.mut[,jj] ~ datt.mut[,"PDS.42"], data = datt.mut, span = sspan)
-                                                                               loessMod3 <- loess( datt.mut[,jj] ~ datt.mut[,"lasso.scKFO"], data = datt.mut, span = sspan)
-                                                                               
-                                                                               smoothed <- c( range01( predict(loessMod1)),
-                                                                                              range01( predict(loessMod2)) ,
-                                                                                              range01(predict(loessMod3)) )
-                                                                             }) )
-                                     
-                                     # ad feature names
-                                     colnames(loessRes.wt ) <-   colnames(loessRes.mut ) <- colnames( ATACseq_tgenesM.podo)
-                                     
-                                     # combine with metadata
-                                     loessRes.wt <- cbind.data.frame( 
-                                       response= c( datt.wt[,"index"] ,
-                                                    datt.wt[,"PDS.42"], 
-                                                    datt.wt[,"lasso.scKFO"] ) ,
-                                       rType = c( rep("index",nrow(datt.wt)),
-                                                  rep("PDS.42",nrow(datt.wt)), 
-                                                  rep("lasso.scKFO",nrow(datt.wt))) ,
-                                       loessRes.wt)
-                                     
-                                     loessRes.mut <- cbind.data.frame( 
-                                       response= c( datt.mut[,"index"] ,
-                                                    datt.mut[,"PDS.42"], 
-                                                    datt.mut[,"lasso.scKFO"] ) ,
-                                       rType = c( rep("index",nrow(datt.mut)),
-                                                  rep("PDS.42",nrow(datt.mut)), 
-                                                  rep("lasso.scKFO",nrow(datt.mut))) ,
-                                       loessRes.mut)
-                                     
-                                     # combine wt and mut
-                                     toPlot<- cbind( gtypeDE= c( rep( "control", nrow(loessRes.wt) ), 
-                                                                 rep( "experiment", nrow(loessRes.mut) )),
-                                                     dataSet=names(listSCSN.PDS_1K)[ii] , 
-                                                     rbind( loessRes.wt , loessRes.mut) )
-                                     return( toPlot )
-                                   } )
-    
-    TFmRNA_loess.AUCell.melt <- reshape2::melt( TFmRNA_loess.AUCell ,
-                                                id=c("gtypeDE", "dataSet", "response", "rType"))
-    colnames( TFmRNA_loess.AUCell.melt )[ colnames(TFmRNA_loess.AUCell.melt)=="value" ] <- "predicted"
-    
-    ### KFO samples
-    ## calculate smoothed activity profile of mRNA lvls and make a DF for plotting
-    TFmRNA_loess.smpls <- Reduce( rbind , lapply( seq(listSCSN.PDS) , 
-                                                  function(ii, datt= listSCSN.PDS, 
-                                                           sspan=1, scale.arg=F )
-                                                  {
-                                                    print(ii)
-                                                    ## select TFs and order cells by PDS
-                                                    expr <- datt[[ii]]@assays$RNA@data
-                                                    expr <- expr [ match(colnames(ATACseq_tgenesM.podo) , rownames( expr ) ) ,  ]
-                                                    
-                                                    expr[is.na(expr)]<- 0
-                                                    rownames( expr) <- colnames(ATACseq_tgenesM.podo)
-                                                    
-                                                    ## fit curves for each sample
-                                                    snames=names(table(datt[[ii]]$sample))[table(datt[[ii]]$sample)> 50 ]
-                                                    
-                                                    toPlot<- Reduce( rbind, lapply( seq(snames),
-                                                                                    function(jj){
-                                                                                      
-                                                                                      print(snames[jj])        
-                                                                                      datt.smpl <- cbind.data.frame(  
-                                                                                        PDS.42= datt[[ii]]$PDS.42[
-                                                                                          datt[[ii]]$sample== snames[jj] ],
-                                                                                        lasso.scKFO= datt[[ii]]$lasso.scKFO[
-                                                                                          datt[[ii]]$sample==snames[jj]],
-                                                                                        t( expr[, datt[[ii]]$sample==snames[jj] ] )
-                                                                                      )
-                                                                                      
-                                                                                      datt.smpl <- datt.smpl[ datt.smpl$PDS.42>  mean(datt.smpl$PDS.42)-3*sd(datt.smpl$PDS.42) & 
-                                                                                                                datt.smpl$PDS.42<  mean(datt.smpl$PDS.42)+3*sd(datt.smpl$PDS.42), ]
-                                                                                      
-                                                                                      # smoothen
-                                                                                      loessRes.smpl <- Reduce( cbind, lapply( (ncol(datt.smpl)-76):ncol(datt.smpl) ,
-                                                                                                                              function(jj){
-                                                                                                                                # print(jj)
-                                                                                                                                
-                                                                                                                                loessMod2 <- loess( datt.smpl[,jj] ~ datt.smpl[,"PDS.42"], data = datt.smpl, span = sspan)
-                                                                                                                                loessMod3 <- loess( datt.smpl[,jj] ~ datt.smpl[,"lasso.scKFO"], data = datt.smpl, span = sspan)
-                                                                                                                                
-                                                                                                                                smoothed <- c(  range01(predict(loessMod2)) ,
-                                                                                                                                                range01(predict(loessMod3)) )
-                                                                                                                              }))
-                                                                                      # ad feature names
-                                                                                      colnames(loessRes.smpl ) <-  colnames( ATACseq_tgenesM.podo)
-                                                                                      
-                                                                                      # combine with metadata
-                                                                                      loessRes.smpl <- cbind.data.frame( 
-                                                                                        sample= snames[jj],
-                                                                                        gtypeDE= rep( datt[[ii]]$gtypeDE[ match( rownames(datt.smpl),
-                                                                                                                                 rownames(datt[[ii]]@meta.data))],
-                                                                                                      2 ), 
-                                                                                        response= c( datt.smpl[,"PDS.42"], 
-                                                                                                     datt.smpl[,"lasso.scKFO"] ) ,
-                                                                                        rType = c( rep("PDS.42",nrow(datt.smpl)), 
-                                                                                                   rep("lasso.scKFO",nrow(datt.smpl))) ,
-                                                                                        loessRes.smpl)
-                                                                                      
-                                                                                      return(loessRes.smpl)
-                                                                                      
-                                                                                    })
-                                                    )
-                                                    
-                                                    # combine wt and mut
-                                                    toPlot<- cbind( dataSet=names(datt)[ii] , 
-                                                                    toPlot )
-                                                    return( toPlot )
-                                                  }) )
-    saveRDS( TFmRNA_loess.smpls , file= "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFmRNA_loess1.smpl.RDS")
-    # melt
-    TFmRNA_loess.smpls.melt <- reshape2::melt( TFmRNA_loess.smpls ,
-                                               id=c( "gtypeDE","dataSet", "sample","response", "rType"))
-    colnames( TFmRNA_loess.smpls.melt )[ colnames(TFmRNA_loess.smpls.melt)=="value" ] <- "predicted"
-    
-    
-  }
+      }
 
 ### TF activity profiles
   {
     
   ## plot selected genes for many studies
-  TFset.down <- c("Wt1", "Mafb", "Zbtb20", "Lmx1b", "Pbx2","Zbtb7c","Tcf21","Creb3l2") 
-  TFset.up <- c("Nr4a1","Pbx1","Klf2","Arid5b","Plagl1","Creb3") 
-  TFset <- c( TFset.down, TFset.up)
-  TFset <- c( "Wt1",  "Zbtb20","Mafb","Lmx1b")
-  TFset <- c( "Wt1",  "Zbtb20")
-  TFset <- c( "Nphs1",    "Kirrel")
-  
-  par( parmar=c(6,9) )
-  lapply(6:56, function(ii){
-    TFset <- colnames(TFset)
-  })
+    TFset <- c( "Klf4", "Notch1", "Foxc1", "Foxc2", "Wt1", "Mafb", "Tcf21", "Lmx1b" )
+    
   datTOplot <- geneExpr_loess.1K.melt
   datTOplot <- datTOplot[datTOplot$variable%in%TFset &
                            datTOplot$rType=="PDS",]
@@ -2425,7 +2124,7 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
                        color=variable ,
                        y=predicted) )+
       geom_line( lwd=1  )+ 
-    # geom_jitter( ) +
+    geom_jitter( ) +
     facet_grid( rows = vars(dataSet), cols = vars(gtypeDE),
                 scales = "free", space="free") + theme_bw() 
   
