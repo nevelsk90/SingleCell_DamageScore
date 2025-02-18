@@ -32,9 +32,9 @@ library( ComplexHeatmap )
 # setwd
 setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure4")
 
-# load necessary code
+# source necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
-source("https://raw.githubusercontent.com/nevelsk90/R_scripts/main/func_analysis.R")  
+source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/func_analysis.R")  
 
 # load damage signatures
 DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
@@ -137,8 +137,6 @@ genecorrPDS.Sprmn_freq <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/Di
     ### use Robert's function for GO analysis
     {
       library(DBI)
-      source("/home/tim_nevelsk/PROJECTS/myCode/func_analysis.R")  
-      
       
       # run function on list of DE results
       GOrobert_res.cut10 <- lapply( unique(TRN_geneClust), function(ii)

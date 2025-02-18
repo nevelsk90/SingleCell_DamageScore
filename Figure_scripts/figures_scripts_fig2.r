@@ -29,8 +29,9 @@ setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure
 inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
-source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
-source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
+source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
+source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")  
+
 
 # load damage signatures
 DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")

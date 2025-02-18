@@ -28,8 +28,8 @@ library( RColorBrewer )
 
 #### load functions
 # calculate damage score
-source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
-source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")
+ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
+ source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/func_analysis.R")  
 
 #### load data #### 
 # ### load KFO and GSE146912 data
@@ -823,8 +823,7 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
       
       ### functional annotation by topGO
       {
-        source("/home/tim_nevelsk/PROJECTS/myCode/func_analysis.R")
-        
+
         ### functional annotation by Robert
         # run function on list of DE results
         
