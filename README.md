@@ -6,6 +6,7 @@ folder that contains scripts for making figures from preprocessed data.
 
 ### Analysis_scripts 
 folder that contains scripts for analysing data using the damage score.
+* **code_KNNfilt** - folder with KNN filtration code (python) to filter sporadic cells and identify circular clusters of glomerular cells in spatial transcriptomics data. Modified from https://github.com/marshalljamie/Kidney-Slide-seq
 * snRNAseq_analysis_Nphs2mut.R - analysis of Nphs2 mut. single-nuclei RNAseq data. Same code was used to analyse Wt1het.del and Pdss2 mut snRNAseq datasets generated for the study. 
 * xenium.human_PDSanalysis.r - analysis of human kidney Xenium 5K spatial transcriptomics data
 * Supervised.vs.Unsupervised_DamageSignature.r - comparison of the supervised and unsupervised (trajectory inference) damage signatures
