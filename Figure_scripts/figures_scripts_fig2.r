@@ -42,33 +42,11 @@ DS_all.HOMO$HOMO <- unlist(DS.HOMO$HOMO)
 # load scsn podo genes
 allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
-#### 1. functional validation with mouse data #### 
+#### 1. panel A. functional validation with mouse data #### 
 ### PDS vs Proteinura in KFO snRNAseq datasets
   {
-    # read expression data
-    # listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
-    # listSCSN.1K.sampl <- lapply( seq( listSCSN ), function(ii)
-    #   {
-    #   print(ii)
-    #   # if( names(listSCSN)[ii]=="Nphs2") {
-    #   #   newSeu <- subset( listSCSN[[ii]] , subset= sample %in% c(
-    #   #     "140739", "140738", "140740", "140741", "139919",
-    #   #     "139917", "139921", "139913", "139915", "139911" ))
-    #   # } else
-    #   newSeu <- listSCSN[[ii]]
-    # 
-    # 
-    #   # balance samples
-    #   Idents(newSeu)<- newSeu$sample
-    #   newSeu <- subset( newSeu , downsample=1000 )
-    # 
-    #   return(newSeu)
-    # })
-    # names(listSCSN.1K.sampl ) <- names(listSCSN)
-    # saveRDS(listSCSN.1K.sampl , "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
-    listSCSN.1K.sampl <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
-    names(listSCSN.1K.sampl) <- c( "Nphs2", "Wt1", "Pdss2", "Lmx1b", "btbr", 
-                                   "cd2ap", "doxo", "nephr.D1", "nephr.D5" ) 
+     listSCSN.1K.sampl <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+
     # laod annotation
     annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
     annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
@@ -135,128 +113,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     dev.off() 
   }
 
-### Suppl fig. pseudo-time DS vs Proteinura in KFO snRNAseq datasets
-  {
-  # read ptime signature
-    pseudo <- readRDS( file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure1/Supl.Fig1/listSCSN.1K_sling.ptimeDE.rda")
-    pseudoDS <- pseudo[pseudo$Gene.Symbol %in% allPodoGenes, ]
-    pseudoDS <- data.frame( gene_symbol=pseudoDS$Gene.Symbol,
-                            mean_rank = seq(pseudoDS$Gene.Symbol), 
-                            direction_foldchange = ifelse(
-                              pseudoDS$log2FoldChange<0 , -1, 1) )
-    # convert gene names to human orthologs
-    pseudoDS.HOMO <-  pseudoDS[1:300,]
-    pseudoDS.HOMO$HOMO <- unlist(fun_homoTO.FROMmouse( 
-      gns = pseudoDS.HOMO$gene_symbol, TO = F)$HOMO)                       
-    
-  listSCSN.1K.ptime <- lapply( seq(listSCSN.1K.sampl), function(ii)
-    {
-      print(ii)
-      newSeu <- listSCSN.1K.sampl[[ii]]
-      
-      
-      ## exclude genes non.expressed in more than certain percentage of cells
-      expr <- newSeu@assays$RNA@counts
-      expr <- expr[ rowSums( round(expr) > 0 ) > 0 , ]
-      
-      # calculate damage signatures
-      newSeu@meta.data$PDS <- DS_calc.func( exprMatrices = expr , 
-                                            DSignature = pseudoDS , 
-                                            ntop = 42 , wghtd = T,
-                                            ceilThrsh =  0.05 )
-      
-      # adjust ceilThrsh based on a total number of genes in the matrix!
-      # the top should include ~ 1K genes
-      
-      return(newSeu)
-    })
-  names(listSCSN.1K.ptime) <- names(listSCSN.1K.sampl)
-  
-
-  # combine metadata from 3 experiments 
-  datt <- Reduce( rbind , lapply( seq(listSCSN.1K.ptime), function(ii) {
-    XX <- listSCSN.1K.ptime[[ii]]@meta.data 
-    XX <- XX[,c( "group","sample","gtype", "PDS")]
-    XX$dataSet <- names(listSCSN.1K.ptime)[ii]
-    return(XX)
-  }))
-  
-  # treat carefully 21 week Pdss2 samples since they have only per group measurements
-  datt1 <- datt[ datt$sample %in% c( "146985", "146986", "143485" , "143486") ,]
-  # aggregate  Pdss2 samples
-  aggPDS1 <- aggregate( .~group , FUN = mean , 
-                        data= datt1[ , c("group", "PDS")] )
-  aggPDS1 <- aggPDS1[rep(seq_len(nrow(aggPDS1)), each = 2), ]
-  aggPDS1$group <-  c( "146985", "146986", "143485" , "143486")
-  colnames(aggPDS1)[1] <- "sample"
-  
-  # the rest of samples
-  datt2 <- datt[ !(datt$sample %in%  c("146985", "146986", "143485" , "143486")), ]
-  aggPDS2 <- aggregate( .~sample , FUN=mean,
-                        data= datt2[ , c( "sample", "PDS" )] ) 
-  # combine all samples
-  aggPDS <- rbind(aggPDS2, aggPDS1)
-  
-  aggPDS$AlbCrRatio <- annot_tab$AlbCrRatio[ 
-    match( sub("SID","" ,aggPDS$sample) , annot_tab$CCG_Sample_ID)]
-  aggPDS$group <- annot_tab$group[ 
-    match( sub("SID","" ,aggPDS$sample ), annot_tab$CCG_Sample_ID)]
-  aggPDS$gtype <- as.factor(annot_tab$Genotype[ 
-    match( sub("SID","" ,aggPDS$sample ) , annot_tab$CCG_Sample_ID)])
-  aggPDS$gtypeDE <- ifelse( aggPDS$gtype=="wt" , "control", "experimental")
-  
-  PDSvec <- grep("PDS",names(datt1), value = T)
-  aggPDS <- aggPDS[ !is.na(aggPDS$AlbCrRatio),]
-  aggPDS$dataSet <- datt$dataSet[ match( aggPDS$sample, datt$sample )]
-  
-  
-  # plot lm and correlation
-  gg1 <- ggplot2::ggplot( data = aggPDS, aes( 
-    x = aggPDS[,PDSvec[ii]], y = log10(AlbCrRatio) ) ) +
-    geom_point(  size=6, aes(col=dataSet, shape=gtypeDE)) +
-    theme_bw() +  theme( text = element_text(size = 22)) + 
-    geom_smooth( method='lm', color="black", se = FALSE) + 
-    ggtitle( "snRNAseq KFO data" ) + xlab("aggregated PDS")+
-    stat_cor( size=7, method = "spearman" ) 
-  # geom_text(aes(label = sample  ), size=6, position = "dodge")
-  
-  # density plots 
-  gg2 <- ggplot2::ggplot( data = datt, aes( x=datt[, "PDS"], color=gtype)) +
-    geom_density(size=1.5) + ggtitle( PDSvec[ii])+ 
-    theme_bw() +  theme( text = element_text(size = 22)) 
-  
-  # dotplot for samples of Nphs2mut
-  aggPDS.nphs2 <- datt[datt$sample%in% listSCSN.1K.ptime$Nphs2$sample,]
-  aggPDS.nphs2 <- aggregate( .~sample , FUN=mean,
-             data= aggPDS.nphs2[ , c( "sample", "PDS" )] ) 
-  aggPDS.nphs2$group <- annot_tab$group[ 
-    match( sub("SID","" ,aggPDS.nphs2$sample ), annot_tab$CCG_Sample_ID)]
-  gg3 <- ggplot2::ggplot( data = aggPDS.nphs2, 
-                          aes( y=aggPDS.nphs2[,"PDS"], 
-                               x=group, 
-                               color=group)) +
-    geom_jitter(size=1.5) + ggtitle( PDSvec[ii])+ 
-    theme_bw() +  theme( text = element_text(size = 22)) +
-    geom_label(aes(label=sample))
-  
-  # density plots for nphs2
-  datt.nphs2 <- datt[datt$sample%in% listSCSN.1K.ptime$Nphs2$sample,]
-  gg4 <- ggplot2::ggplot( data = datt.nphs2, 
-                          aes( x=datt.nphs2[, "PDS" ], 
-                               color=group)) +
-    geom_density(size=1.5) + ggtitle( PDSvec[ii])+ 
-    theme_bw() +  theme( text = element_text(size = 22)) 
-  
-  ggl <- cowplot::plot_grid(plotlist = list( gg1, gg2, gg3, gg4 ) , ncol=2)
-  ggl
-  
-  pdf(height = 10, width = 18, file = "Supl.Fig2/ptimeDSvsAlbCr_KFO.scatter.pdf")
-  ggl
-  dev.off()
-
-}
-
-### Suppl fig. PDS vs Proteinura in bulk public datasets
+### Suppl. fig. 4A PDS vs Proteinura in bulk public datasets
   {
   stud <- c( "GSE117571", "GSE108629", "GSE17709" ,
              "GSE117987", "GSE126217" ,"GSE154955",
@@ -344,8 +201,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
   
 }
 
-
-#### 3. relate PDS and Clinical traits in podocytes #### 
+#### 2. panel B. relate PDS and Clinical traits in podocytes #### 
   ### snRNAseq KPMP data, correlation heatmap for PDS vs selected clinical trait
     {
       # load precomputed data, filtered for CKD and AKI samples with at least 3 podocytes
@@ -386,7 +242,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
       
     }
 
-  ### Suppl Fig. correlation heatmap for PDS vs all clinical traits
+  ### Suppl Fig. 4B correlation heatmap for PDS vs all clinical traits
     {         
     
       corMat <- Reduce( cbind.data.frame, 
@@ -423,7 +279,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     
   }
 
-  ### Suppl. fig. GSE176465 urine samples, PDS vs UPCR
+  ### Suppl. fig. 4D GSE176465 urine samples, PDS vs UPCR
     {
     seu.filt <- readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/GSE176465_scRNAseq/GSE176465_seurat.rda" )
     
@@ -490,7 +346,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     
   }
 
-#### 4. validate PDS in Human spatial transcriptomics #### 
+#### 3. panel C. validate PDS in Human spatial transcriptomics #### 
 ### visualise PDS in the highQ histo-image from KPMP patient 29.10282 
   
   # load Seurat object with annotated gloms
@@ -561,8 +417,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
   }
   
   
-  ### Suppl. fig  summary boxplot: PDS by glom type
-  # boxplots
+  ### Suppl. fig 4C summary boxplot: PDS by glom type
   gg0 <- ggplot(kpmp.sptl_29.10282.seur@meta.data, 
          aes(x=glomType, y=PDS.42, fill=glomType))+ 
     geom_boxplot()+theme_bw()+

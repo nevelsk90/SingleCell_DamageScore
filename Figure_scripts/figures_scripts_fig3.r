@@ -28,7 +28,7 @@ library( RColorBrewer )
 
 # setwd
 setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure3")
-inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+# inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
@@ -304,7 +304,6 @@ PAdotHeatPlot <- function( cells="all",
 
 #### 1. Pathway fingerprint heamaps #### 
 
-
 ### KFO studies, annotated by PDS and AlbCr
   {
 
@@ -526,7 +525,7 @@ PAdotHeatPlot <- function( cells="all",
   
 }
 
-### Suppl.fig. all studies, annotated by PDS only
+### Suppl.fig. 6. all studies, annotated by PDS only
   {
     
   ### select top or common Paths
@@ -672,317 +671,12 @@ PAdotHeatPlot <- function( cells="all",
   
   } 
 
-### Suppl.Fig. expression of Oxphos and Glycolisis genes
-  {
-  ggenes1 <- keggPath_pathlist[["Glycolysis / Gluconeogenesis"]][ keggPath_pathlist[["Glycolysis / Gluconeogenesis"]] %in%  allPodoGenes ]
-  ggenes2 <- keggPath_pathlist[["Oxidative phosphorylation"]][ keggPath_pathlist[["Oxidative phosphorylation"]] %in%  allPodoGenes ]
-  
-  ### transcript lvls 
-  {
-    GlyOxph.pathMean <- lapply( seq(listSCSN.1K.sampl), function(ii)
-    {
-      print( ii )
-     
-      datt <-  Seurat::ScaleData( listSCSN.1K.sampl[[ii]], features = c( ggenes1, ggenes2))
-      
-      datt1 <- cbind( rowMeans( datt@assays$RNA@data[ ggenes1 ,  datt$gtypeDE=="control"] ), 
-                      rowMeans(  datt@assays$RNA@data[ ggenes1 ,  datt$gtypeDE!="control"] ) )
-      
-      datt2 <- cbind( rowMeans( datt@assays$RNA@data[ ggenes2 ,  datt$gtypeDE=="control"] ),
-                      rowMeans(  datt@assays$RNA@data[ ggenes2 ,  datt$gtypeDE!="control"] ) )
-      
-      ll <- list( datt1 , datt2)
-      names(ll) <- c("glyc","oxphos")
-      return(ll)
-    })
-    
-    Gly.pathMean <- apply(simplify2array(lapply( GlyOxph.pathMean, "[[",1) ), 
-                          c(1, 2), FUN = mean, na.rm = TRUE)
-    
-    colnames(Gly.pathMean) <-  paste( c("ctrl","xprmnt"),"Glyc" ,  sep = "_")
-    
-    Oxph.pathMean <-apply(simplify2array(lapply( GlyOxph.pathMean, "[[",2) ), 
-                          c(1, 2), FUN = mean, na.rm = TRUE)
-    colnames(Oxph.pathMean) <-  paste(c("ctrl","xprmnt"),  "Oxphos" ,  sep = "_")
-    
-    
-    gg1 <- ComplexHeatmap::Heatmap(( Gly.pathMean), col=viridis(10), 
-                                   cluster_columns  = F, name = "Glycolisis KEGG")
-    gg2 <- ComplexHeatmap::Heatmap(( Oxph.pathMean), col=viridis(10), 
-                                   cluster_columns = F, name="Oxphos KEGG")
-    
-    pdf( width = 4, height = 24, file = "XX.pdf")
-    plot_grid(grid.grabExpr(draw(gg1)), grid.grabExpr(draw(gg2)), nrow = 2, rel_heights = c(1,3))
-    dev.off()
-  }
- 
-   
-   
-   ### protein expression of markers
-   {
-     # convert gene to protID
-     mart_mouse <- useMart( "ensembl",dataset="mmusculus_gene_ensembl" )
-     gene2prot <- biomaRt::getBM( attributes=c( 'external_gene_name',"uniprotsptrembl","uniprotswissprot"),  mart = mart_mouse)
-     gene1.prot <-  c( toupper( ggenes1 ), 
-                       gene2prot$uniprotsptrembl[ ( gene2prot$external_gene_name ) %in%  ggenes1 ] , 
-                       gene2prot$uniprotswissprot[ ( gene2prot$external_gene_name ) %in%  ggenes1 ] )
-     gene1.prot <- gene1.prot[gene1.prot!=""]
-     gene2.prot <-  c( toupper( ggenes2 ), 
-                       gene2prot$uniprotsptrembl[ ( gene2prot$external_gene_name ) %in%  ggenes2 ] , 
-                       gene2prot$uniprotswissprot[ ( gene2prot$external_gene_name ) %in%  ggenes2 ] )
-     gene2.prot <- gene2.prot[gene2.prot!=""]
-     
-     library(DEP)
-     ll <- list.files( pattern = "proteinGroups", full.names = T , 
-                       path = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
-     
-     # read
-     podoGlom_proteome.raw <- lapply( ll , read.csv, header = TRUE,
-                                      stringsAsFactors = FALSE, sep = "\t")
-     # add gene names to first dataset
-     X <- (strsplit(podoGlom_proteome.raw[[1]]$Majority.protein.IDs, split = "\\||;"))
-     X1 <- unlist( lapply(X, function(x) gsub( "_MOUSE", "",paste( unique(x[grep("MOUSE",x)]), collapse = ";") )))
-     X2 <- unlist( lapply(X, function(x) gsub( ".*CON__", "",paste( unique(x[grep("P\\d.*|Q\\d.*",x)]), collapse = ";") )))
-     podoGlom_proteome.raw[[1]]$Gene.names <- ifelse( X1=="", X2 , X1)  
-     
-     # read the data, make unique protein names and filter out  contaminants
-     podoGlom_proteome <- lapply( podoGlom_proteome.raw , function(proteome) {
-       # remove decoy matches and matches to contaminant
-       proteome = proteome[!proteome$Reverse=="+",]
-       proteome = proteome[!proteome$Potential.contaminant=="+",]
-       
-       # Make unique names using the annotation in the "Gene.names" column as primary names 
-       # and the annotation in "Protein.IDs" as name for those that do not have an gene name.
-       proteome_unique <- DEP::make_unique( proteome , names="Gene.names", 
-                                            ids="Protein.IDs", delim = ";")
-       proteome_unique$name <- toupper( proteome_unique$name )
-       return(proteome_unique)
-       
-     })
-     
-     # Generate a SummarizedExperiment object using an experimental design
-     ll.meta <- list.files( pattern = "experimental_design", full.names = T , 
-                            path = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
-     
-     # creating se objects
-     podoGlom_proteome_se <- lapply(seq(podoGlom_proteome), function( ii ){
-       proteome <- podoGlom_proteome[[ii]]
-       print(ii)
-       MRpodo_LFQ_columns <- grep("LFQ.", colnames( proteome )) # get LFQ column numbers
-       experimental_design <- read.table(header=T, sep = "\t",ll.meta[[ii]])
-       MRpodo_proteome_se <- make_se( proteome , MRpodo_LFQ_columns, experimental_design )
-       return(MRpodo_proteome_se)
-     })
-     # filtering
-     podoGlom_proteome_filt <- lapply(seq(podoGlom_proteome_se), function( ii ){
-       print(ii)
-       proteome <- podoGlom_proteome_se[[ii]]
-       experimental_design <- read.table(header=T, sep = "\t",ll.meta[[ii]])
-       
-       # Filter for proteins that are identified in all replicates of at least one condition
-       proteome <- filter_missval(proteome, thr = round(min(summary( as.factor(experimental_design$condition)))*0.49))
-       
-       # Plot a barplot of the protein identification overlap between samples
-       print( plot_coverage(proteome) )
-       
-       # Normalize the data
-       proteome <- normalize_vsn(proteome)
-       meanSdPlot( proteome )
-       
-       # # Visualize normalization by boxplots for all samples before and after normalization
-       # plot_normalization(Nphs2_proteome_filt, Nphs2_proteome_Norm)
-       
-       # imputation
-       plot_detect( proteome )
-       proteome  <- impute( proteome, fun = "MLE")
-       
-     })
 
-     
-
-     
-     ### custom jitterplot
-     ggl <- lapply( seq(podoGlom_proteome_filt) , function( ii )
-      {
-       
-       ### prepare the data
-       XX <- podoGlom_proteome_filt[[ii]]@assays@data[[1]]
-       XX <- XX[  rownames(XX) %in% c( gene1.prot, gene2.prot) , ]
-       # remove genes with less than 3 measurments 
-       XX <- as.data.frame(  XX[rowSums( !is.na(XX) )>=3, ] )
-       
-       XX$name <- rownames(XX)
-       
-       XX.m <- reshape2::melt( XX )
-       ## add metadata
-       XX.m$condition <- sub( "_.*", "", XX.m$variable)
-       XX.m$pathN <- ifelse(XX.m$name %in%  gene1.prot , "Glycolisis","Oxphos" )
-       
-       # plot 
-       gg <- ggplot2::ggplot( data = XX.m ,  
-                              aes( x = value , 
-                                   y = reorder(name, value, FUN = mean, na.rm=T) ) ) + 
-         geom_jitter(shape=16, position=position_jitter(width =0.1, height = 0.1),
-                     size = 5, aes( color=condition)) + 
-         facet_grid(rows = vars(pathN) ,scales = "free_y", space = "free_y") + 
-         scale_colour_colorblind(name = "proteomics\ndataset") +
-         theme_bw() + labs(title = sub("_.*","",basename(ll)[ii]) ) +
-         labs(y = "Gene symbol", x = "LFQ itensity") +
-         theme(text=element_text(size=20 )) +
-         guides(color = guide_legend(override.aes = list(size=5)))
-       return(gg)
-       # save plot
-       # pdf(width = 10, height =  nrow( XX)*0.4, file = paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ProteinValidation/figures/",
-       #                                                        sub("_.*","",basename(ll)[ii]),"_PDS.50_jitterplotNOTscaled.pdf", sep = ""))
-       # print(gg)
-       # dev.off()
-       # png(width = 800, height =  nrow( XX)*40, file = paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ProteinValidation/figures/",
-       #                                                        sub("_.*","",basename(ll)[ii]),"_PDS.50_jitterplotNOTscaled.png", sep = ""))
-       # print(gg)
-       # dev.off()
-     })
-     
-     pdf( height = 24, width = 20, file = "XX.pdf")
-   cowplot::plot_grid( plotlist = ggl[4:5])
-   dev.off()
-   
-  
-}
-}
-
-### Suppl.Fig. granger causality
-  {
-  lmtest::grangertest
-  iids <- seq(listSCSN.1K.sampl)
-  
-  Grangertest_list <-  lapply( iids, function(ii)
-    {
-    
-    print(ii)
-    dataSet <- listSCSN.1K.sampl[[ii]]
-
-    
-    # # downsample
-    # Idents(datt) <- "group"
-    # datt <- subset( datt, downsample=1000 )
-    # Idents(datt) <- "gtypeDE"
-    # datt <- subset( datt, downsample=1000 )
-    # datt <- subset( datt, gtypeDE=="experimental" )
-    
-
-    # order according to PDS
-    expPDSorder <- colnames( dataSet )[ order( dataSet$PDS) ]
-    
-
-    # extract PA info, select pathways
-    # order PA by PDS
-    bothDB <-  rbind( listSCSN.1K.sampl_PAaucell[[ ii ]]$cells_AUC.kegg[ , expPDSorder ],
-                      listSCSN.1K.sampl_PAaucell[[ ii ]]$cells_AUC.react[ , expPDSorder ] )
-    bothDB <- bothDB[ match( sub(" \\*KEGG| \\*REACT","",pthsPlt), 
-                             rownames( bothDB) ),  ]
-    rownames( bothDB ) <-  pthsPlt
-    
-    
-    datTOplot <- bothDB
-    
-    # ## smooth pathway activity
-    # path_smooth <- apply( datTOplot , 1 , function(x) slideFunct(x, ncol(datTOplot)/WsizeF,
-    #                                                              ncol(datTOplot)/WstepF ))
-    
-   #  # calculate LFC of the path change
-   # LFC_vec <- path_smooth[1,]/path_smooth[ nrow(path_smooth),]
-   # # swap the direction of curve to make all pathways changing in the same direction
-   # path_smooth[ , LFC_vec >1 & !is.na(LFC_vec)] <- path_smooth[, LFC_vec >1 & !is.na(LFC_vec) ]*-1
-   # 
-    ll <- sapply( 1:(nrow(bothDB)), function(jj){
-       print(jj)
-      sapply( 1:(nrow(bothDB)) , function( ff){
-        # XX <- tryCatch( lmtest::grangertest( x=path_smooth[ , jj], y=path_smooth[ , ff] )$`Pr(>F)`[2], 
-        XX <- tryCatch( lmtest::grangertest( x=bothDB[ jj, ], y=bothDB[ ff, ] )$`Pr(>F)`[2], 
-                                          error=function(e) NA )
-      })
-    })
-    
-    rownames(ll) <- colnames(ll) <- rownames(datTOplot)
-    return( ll )
-    
-  })
-  
-  
-  names( Grangertest_list ) <- names( listSCSN.1K.sampl )[iids]
-  
-  Grangertest_combineP <- sapply( seq(Grangertest_list[[1]]), 
-                                  function(ii){
-  datt <- sapply(seq(Grangertest_list), function(jj) Grangertest_list[[jj]][ii])
-  datt[ is.na(datt)] <- 1
-   metap::sumlog( datt)$p
-  })
-  MM <- matrix(Grangertest_combineP, nrow = 26, ncol = 26 )
-  colnames(MM) <- rownames(MM) <- colnames(Grangertest_list[[1]])
-  
-  
-  MM_adj <- apply( MM, 2, p.adjust,"fdr")
-  toPlot <-  -log10( MM_adj )
-  hist(toPlot)
-  toPlot[ toPlot< 90] <- 0
- 
-  ComplexHeatmap::Heatmap( (toPlot) , cluster_columns = F, cluster_rows = F, 
-                           col=viridis(20) )
- 
-  library(igraph)
-  ggraph <- reshape2::melt(toPlot)
-  ggraph <- ggraph[ggraph$value!=0,]
- 
-  pdf(width = 5,height = 5, file="selected_path_Grngr.graph.pdf")
-    plot( igraph::graph_from_edgelist(as.matrix(ggraph[,1:2])),edge.arrow.size=0.5 )
-  dev.off()
-  
-  ### calculate direction
-  LFCs <-  sapply( iids, function(ii)
-    {
-    
-    print(ii)
-    dataSet <- listSCSN.1K.sampl[[ii]]
-    
-    
-    # # downsample
-    # Idents(datt) <- "group"
-    # datt <- subset( datt, downsample=1000 )
-    # Idents(datt) <- "gtypeDE"
-    # datt <- subset( datt, downsample=1000 )
-    # datt <- subset( datt, gtypeDE=="experimental" )
-    
-    
-    # order according to PDS
-    expPDSorder <- colnames( dataSet )[ order( dataSet$PDS) ]
-    
-    
-    # extract PA info, select pathways
-    # order PA by PDS
-    bothDB <-  rbind( listSCSN.1K.sampl_PAaucell[[ ii ]]$cells_AUC.kegg[ , expPDSorder ],
-                      listSCSN.1K.sampl_PAaucell[[ ii ]]$cells_AUC.react[ , expPDSorder ] )
-    bothDB <- bothDB[ match( sub(" \\*KEGG| \\*REACT","",pthsPlt), 
-                             rownames( bothDB) ),  ]
-    rownames( bothDB ) <-  pthsPlt
-    
-    
-    datTOplot <- bothDB
-    
-    ## smooth pathway activity
-    path_smooth <- apply( datTOplot , 1 , function(x) slideFunct(x, ncol(datTOplot)/WsizeF,
-                                                                 ncol(datTOplot)/WstepF ))
-
-     # calculate LFC of the path change
-    LFC_vec <- log10(path_smooth[1,]/path_smooth[ nrow(path_smooth),])
-  })
-  
-  rowMeans(LFCs)
-}
 
 
 
 #### 2. show changes in individual pathway(s) across all studies #### 
-  {
+  
   
   # pathway activity
   sepLath <- c( "Neutrophil degranulation" ,
@@ -1004,15 +698,14 @@ PAdotHeatPlot <- function( cells="all",
   pdf( height = 8 , width = 20, file="Reactome_singlePath_heatDots.pdf")
   cowplot::plot_grid( plotlist = ggl, nrow = 2)
   dev.off()
-  }
-
-
-
+  
 
 #### 3. show corr. of individual genes with PDS on a pathway diagram #### 
-### combine corr tables with networks and TF info for cytoscape 
+### combine corr tables with network info to visualise for cytoscape 
 { 
   ### data to plot on Net
+  genecorrPDS.Sprmn_r.cntrd <- read( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
+  
   toPlot.all <- genecorrPDS.Sprmn_r.cntrd
   # combine all controls and all exprmnt in indiv. columns
   toPlot.all <- cbind(  ctrl_mean=rowMeans(toPlot.all[,1:7], na.rm = T), 

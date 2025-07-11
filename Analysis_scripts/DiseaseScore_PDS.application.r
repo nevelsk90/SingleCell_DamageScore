@@ -179,89 +179,81 @@ TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/P
      
     }
   
-
   ### extract q and r value tables
+  {
+    
+    # genecorrPDS_Sprmn <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PDScorr/SCSN_genecorrPDS_Sprmn.29.09.23.rda")
+    genecorrPDS_Sprmn <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.22.12.23.rda")
+    
+    
+    ### extract r
     {
       
-      # genecorrPDS_Sprmn <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PDScorr/SCSN_genecorrPDS_Sprmn.29.09.23.rda")
-      genecorrPDS_Sprmn <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.22.12.23.rda")
-
-   
-    ### extract r
-      {
-        
-        X1 <-  lapply( lapply( genecorrPDS_Sprmn,"[[", 1),"[[", 1 )
-        X2 <-  lapply( lapply( genecorrPDS_Sprmn,"[[", 2),"[[", 1 )
-        
-        allgenes <- Reduce( union, lapply( seq(X2) , function(ii) union( 
-          rownames(X1[[ii]]) , rownames(X2[[ii]]) )))
-
-        names(X1) <- names(X2) <- names(genecorrPDS_Sprmn)
-        
-        X1[is.na(X1)] <- list( X1$nephr.D1 , X1$nephr.D1)
-
-        cnames <- names(X1)
-        X1 <- Reduce( cbind.data.frame,  lapply( seq(X1) , function(ii) X1[[ii]][
-            match( allgenes, rownames( X1[[ii]])),] ) )
-        colnames(X1) <-paste0( cnames, "_ctrl")
-        
-        cnames2 <- names(X2)
-        X2 <- Reduce( cbind.data.frame,  lapply( seq(X2) , function(ii) X2[[ii]][
-          match( allgenes, rownames( X2[[ii]])),] ) )
-        colnames(X2) <-paste0( cnames2, "_xprmnt")
-        rownames(X1) <- rownames(X2) <- allgenes
-        
-        ### r-value table
-        genecorrPDS.Sprmn_r <- cbind(X1,X2)
-        
-        genecorrPDS.Sprmn_r.cntrd <- apply( genecorrPDS.Sprmn_r, 2, scale, scale = F)
-        rownames(genecorrPDS.Sprmn_r.cntrd) <- rownames(genecorrPDS.Sprmn_r)
+      X1 <-  lapply( lapply( genecorrPDS_Sprmn,"[[", 1),"[[", 1 )
+      X2 <-  lapply( lapply( genecorrPDS_Sprmn,"[[", 2),"[[", 1 )
+      
+      allgenes <- Reduce( union, lapply( seq(X2) , function(ii) union( 
+        rownames(X1[[ii]]) , rownames(X2[[ii]]) )))
+      
+      names(X1) <- names(X2) <- names(genecorrPDS_Sprmn)
+      
+      X1[is.na(X1)] <- list( X1$nephr.D1 , X1$nephr.D1)
+      
+      cnames <- names(X1)
+      X1 <- Reduce( cbind.data.frame,  lapply( seq(X1) , function(ii) X1[[ii]][
+        match( allgenes, rownames( X1[[ii]])),] ) )
+      colnames(X1) <-paste0( cnames, "_ctrl")
+      
+      cnames2 <- names(X2)
+      X2 <- Reduce( cbind.data.frame,  lapply( seq(X2) , function(ii) X2[[ii]][
+        match( allgenes, rownames( X2[[ii]])),] ) )
+      colnames(X2) <-paste0( cnames2, "_xprmnt")
+      rownames(X1) <- rownames(X2) <- allgenes
+      
+      ### r-value table
+      genecorrPDS.Sprmn_r <- cbind(X1,X2)
+      
+      genecorrPDS.Sprmn_r.cntrd <- apply( genecorrPDS.Sprmn_r, 2, scale, scale = F)
+      rownames(genecorrPDS.Sprmn_r.cntrd) <- rownames(genecorrPDS.Sprmn_r)
+      
+      # saveRDS( genecorrPDS.Sprmn_r.cntrd , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
+      # # group all controls and all exprmntl smpls
+      # genecorrPDS.Sprmn_qval <- genecorrPDS.Sprmn_qval[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
+      # genecorrPDS.Sprmn_p <- genecorrPDS.Sprmn_p[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
+      # genecorrPDS.Sprmn_r.cntrd <- genecorrPDS.Sprmn_r.cntrd[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
+      # genecorrPDS.Sprmn_r <- genecorrPDS.Sprmn_r[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
+    }
     
-        saveRDS( genecorrPDS.Sprmn_r.cntrd , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
-        # # group all controls and all exprmntl smpls
-        # genecorrPDS.Sprmn_qval <- genecorrPDS.Sprmn_qval[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_p <- genecorrPDS.Sprmn_p[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_r.cntrd <- genecorrPDS.Sprmn_r.cntrd[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_r <- genecorrPDS.Sprmn_r[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-      }
-      
     ### extract p
-      {
-        X1 <- lapply( genecorrPDS_Sprmn,"[[", 1)
-        X2 <- lapply( genecorrPDS_Sprmn,"[[", 2)
-        names(X1) <- names(X2) <- names(genecorrPDS_Sprmn)
-       
-         X1[is.na(X1)] <- list( X1$nephr.D1 , X1$nephr.D1)
-        
-        
-        X1 <- lapply( X1 ,"[[", 4)
-        X2 <- lapply( X2 ,"[[", 4)
-        
-  
-        cnames <- names(X1)
-        X1 <- Reduce( cbind.data.frame,  lapply( seq(X1) , function(ii) X1[[ii]][
-          match( allgenes, rownames( X1[[ii]])),] ) )
-        colnames(X1) <-paste0( cnames, "_ctrl")
-        
-        cnames2 <- names(X2)
-        X2 <- Reduce( cbind.data.frame,  lapply( seq(X2) , function(ii) X2[[ii]][
-          match( allgenes, rownames( X2[[ii]])),] ) )
-        colnames(X2) <-paste0( cnames2, "_xprmnt")
-        rownames(X1) <- rownames(X2) <- allgenes
-        
-        ### r-value table
-        genecorrPDS.Sprmn_p <- cbind(X1,X2)
-        genecorrPDS.Sprmn_q <- apply(genecorrPDS.Sprmn_p, 2, 
-                                     function(X) qvalue::qvalue(X)$qvalues)
-        
-        # # group all controls and all exprmntl smpls
-        # genecorrPDS.Sprmn_qval <- genecorrPDS.Sprmn_qval[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_p <- genecorrPDS.Sprmn_p[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_r.cntrd <- genecorrPDS.Sprmn_r.cntrd[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-        # genecorrPDS.Sprmn_r <- genecorrPDS.Sprmn_r[,c(seq(from=1,to=14,by=2), seq(from=2,to=14,by=2)) ]
-      }
+    {
+      X1 <- lapply( genecorrPDS_Sprmn,"[[", 1)
+      X2 <- lapply( genecorrPDS_Sprmn,"[[", 2)
+      names(X1) <- names(X2) <- names(genecorrPDS_Sprmn)
       
+      X1[is.na(X1)] <- list( X1$nephr.D1 , X1$nephr.D1)
+      
+      
+      X1 <- lapply( X1 ,"[[", 4)
+      X2 <- lapply( X2 ,"[[", 4)
+      
+      
+      cnames <- names(X1)
+      X1 <- Reduce( cbind.data.frame,  lapply( seq(X1) , function(ii) X1[[ii]][
+        match( allgenes, rownames( X1[[ii]])),] ) )
+      colnames(X1) <-paste0( cnames, "_ctrl")
+      
+      cnames2 <- names(X2)
+      X2 <- Reduce( cbind.data.frame,  lapply( seq(X2) , function(ii) X2[[ii]][
+        match( allgenes, rownames( X2[[ii]])),] ) )
+      colnames(X2) <-paste0( cnames2, "_xprmnt")
+      rownames(X1) <- rownames(X2) <- allgenes
+      
+      ### r-value table
+      genecorrPDS.Sprmn_p <- cbind(X1,X2)
+    }
+    
   }
+
   
   ### convert to binary matrix
     {
