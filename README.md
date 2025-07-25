@@ -1,9 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
 # SingleCell_DamageScore
 
 Repository that contains files for the Single-cell Damage Score manuscript, PDS analysis.
