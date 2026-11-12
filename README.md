@@ -6,18 +6,16 @@ Code and gene lists for the Single-cell Damage Score manuscript (podocyte damage
 
 | Folder / file | Content |
 |---|---|
-| `podocyteDamageSignature.tsv` | Podocyte damage signature (381 markers) |
-| `SCSN_allPodoGenes.rda` | Genes expressed in healthy and damaged podocytes in the single-cell RNAseq datasets |
-| `gene_sets_and_tables/` | Derived gene sets and tables, e.g. the damage signature translated to human orthologs |
+| `gene_sets_and_tables/` | Damage signature, podocyte gene list and derived tables (e.g. the signature translated to human orthologs) |
 | `preprocessing/` | Preprocessing of public datasets, one script per dataset |
 | `Analysis_scripts/` | Analyses using the damage score |
 | `Figure_scripts/` | Figures of the manuscript, made from preprocessed data |
 | `archive/` | Older scripts kept for reference; some are still sourced by the analysis scripts (e.g. `archive/scripts_PDS/AUCell_script.r`) |
 
-## Gene sets and tables
+## gene_sets_and_tables
 
-* `podocyteDamageSignature.tsv` - podocyte damage signature consisting of 381 markers. Columns **mean_rank** and **direction_foldchange** show the average rank of differential expression (based on p-value) and the consistent direction of change in experimental compared to control samples across the tested studies.
-* `SCSN_allPodoGenes.rda` - R file with a list of genes expressed in healthy and damaged podocytes in single-cell RNAseq datasets.
+* `gene_sets_and_tables/podocyteDamageSignature.tsv` - podocyte damage signature consisting of 381 markers. Columns **mean_rank** and **direction_foldchange** show the average rank of differential expression (based on p-value) and the consistent direction of change in experimental compared to control samples across the tested studies.
+* `gene_sets_and_tables/SCSN_allPodoGenes.rda` - R file with a list of genes expressed in healthy and damaged podocytes in single-cell RNAseq datasets.
 * `gene_sets_and_tables/DSpodo_musTOhomo_oneTOone.tsv` - the podocyte damage signature translated from mouse to human genes, using one-to-one orthologs only.
 
 ## preprocessing
