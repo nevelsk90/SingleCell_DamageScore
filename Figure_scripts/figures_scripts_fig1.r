@@ -24,7 +24,7 @@ library(rstatix)
 
 # setwd
 setwd( "/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure1" )
-inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
@@ -93,7 +93,7 @@ listSCSN.1K <- readRDS( paste0( inputdir, "/listSCSN_1K.22.12.23.rda") )
 
 #### 3. panel C. model cross validation plots ####
 
-CV_model.list_PDS42.agg <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
+CV_model.list_PDS42.agg <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
 
 # scale PDS
 toPlot.list <- lapply(seq(CV_model.list_PDS42.agg), function(ii){
@@ -244,13 +244,13 @@ names(toPlot.list) <- names(CV_model.list_PDS42.agg)
                                          return(newSeu)
                                        })
     names(listSCSN.PDS_DSsizeTest) <- names(listSCSN.1K.sampl)
-    # saveRDS(listSCSN.PDS_DSsizeTest, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
+    # saveRDS(listSCSN.PDS_DSsizeTest, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
     
   }
   
   ### plot PDS distributions
   {
-    # listSCSN.PDS_DSsizeTest<- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
+    # listSCSN.PDS_DSsizeTest<- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
     
     ## prepare the table
     toPlot <- Reduce( rbind,  lapply( seq(listSCSN.PDS_DSsizeTest) , function(ii){
@@ -294,7 +294,7 @@ names(toPlot.list) <- names(CV_model.list_PDS42.agg)
     # save plots for 2 groups, used for DE
     
     
-    pdf(height = 6, width = 12, file =  paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/SetSize/",
+    pdf(height = 6, width = 12, file =  paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/SetSize/",
                                                "PDS_sizeTest_ctrlVSxprmnt.medianDiff.plot.BY10.pdf", sep = "") )
     print(ppg4)
     dev.off()
@@ -311,14 +311,14 @@ names(toPlot.list) <- names(CV_model.list_PDS42.agg)
 
 #### 4. panel D. validate PDS in mouse spatial transcriptomics #### 
 ### read glom coordinates
-TimGlom_coord <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/TimGlom_coord.rda" )
+TimGlom_coord <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/TimGlom_coord.rda" )
 
 ### GSM5713367 Spatial plot, with glom morphology and PDS
   {
     
     ### read cell-type annotation
     ll <-list.files( pattern = "glom_annot" , full.names = T,
-                     path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/BeadLocationsPodoTim/" )
+                     path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/BeadLocationsPodoTim/" )
     TimGlom_ctypes <- lapply( ll,  read.csv , row.names=1)
     names(TimGlom_ctypes) <- sub( "_.*","",basename(ll))
     
@@ -329,7 +329,7 @@ TimGlom_coord <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.
     toPlot <- TimGlom_coord[TimGlom_coord$geoID== "GSM5713367",] 
     
     ### read seurat object
-    seur <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/filtSeur/GSM5713367_filtSeur.rda")
+    seur <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/filtSeur/GSM5713367_filtSeur.rda")
     # annotate all glomerular cells
     seur$glom.KNN <-  TimGlom_ctypes$GSM5713367$cell_type[ match( colnames(seur),
                                                                   TimGlom_ctypes$GSM5713367$barcode)]
@@ -375,7 +375,7 @@ TimGlom_coord <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.
     facet_grid( cols = vars(variable), scales = "free" )
   
 
-  pdf( width = 8, height = 6 , file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/Glom.metrics_scatter.bxplts.test.pdf")
+  pdf( width = 8, height = 6 , file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/Glom.metrics_scatter.bxplts.test.pdf")
   print(gg2)
   dev.off()
   

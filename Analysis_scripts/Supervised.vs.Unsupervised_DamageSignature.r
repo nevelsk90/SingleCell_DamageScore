@@ -1,14 +1,14 @@
 ###=====# Single-Cell Resolution of Cellular Damage Illuminates Disease Progression #=======###
 ###=====# supervised vs unsupervised method for disease signature #=======###
 
-listSCSN.1K.sampl <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+listSCSN.1K.sampl <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 
 #### sling unsupervised sc/sn trajectory ####
 {
   library( scater )
   library(slingshot)
 
-  sce.sling <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.1K_sling.ptime_sce.rda" )
+  sce.sling <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.1K_sling.ptime_sce.rda" )
 
   embedded <- embedCurves(sce.sling, "UMAP.CCA")
   embedded <- slingCurves(embedded)[[1]] # only 1 path.

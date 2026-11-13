@@ -27,12 +27,12 @@ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/Sh
 # calculate damage score
 source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")
 
-DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 ### load subsampled sc data
-listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+listSCSN.1K.sampl <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 ## triangle_vec_to_matrix
 triangle_vec_to_matrix <- function(vec,
                                    diag_val = 0,
@@ -70,12 +70,12 @@ triangle_vec_to_matrix <- function(vec,
 #### load the data ####
     
       # genes expressed in sc.sn
-      scsnRNAseq_mean.rank <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
+      scsnRNAseq_mean.rank <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
       
       ### load DE results
-      FSGS_MA_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/MA_DElist.04.04.22.rda")
-      FSGS_bulk_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/bulk_DElist.04.04.22.rda")
-      FSGS_sc_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/sc_DElist.04.04.22.rda")
+      FSGS_MA_DE <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DE/MA_DElist.04.04.22.rda")
+      FSGS_bulk_DE <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DE/bulk_DElist.04.04.22.rda")
+      FSGS_sc_DE <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DE/sc_DElist.04.04.22.rda")
       
       names(FSGS_sc_DE) <- paste0(c("Coq2","Pdss2","GSE127235" ,"GSE139506",
                                  "btbr", "cd2ap" ,"doxo", "nephr.D1", "nephr.D5", 
@@ -84,12 +84,12 @@ triangle_vec_to_matrix <- function(vec,
   
       
     ### load MA expression matrices
-    ll <- list.files( full.names = T, path= "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/MA/expr_tabs")
+    ll <- list.files( full.names = T, path= "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/MA/expr_tabs")
     MA_explist <- lapply( ll, readRDS )
     names( MA_explist ) <- sub( "_.*","",basename(ll))
   
     ### load bulk expression matrices
-    ll <- list.files( full.names = T, path= "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/bulkRNAseq/expr_tabs")
+    ll <- list.files( full.names = T, path= "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/bulkRNAseq/expr_tabs")
     XX <- lapply( ll, readRDS )
     bulk_explist <- sapply( XX,"[[",1)
     bulk_annlist <- sapply( XX,"[[",2)
@@ -117,7 +117,7 @@ triangle_vec_to_matrix <- function(vec,
   #### combine all
     # expression Matrices
     explist <- c( MA_explist, bulk_explist, sc_explist )
-    saveRDS( explist , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.sc.rda")
+    saveRDS( explist , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.sc.rda")
 
     # annotations
     annotlist <- c( lapply( MA_explist , function(X) sub(".*__", "",colnames(X))),
@@ -141,14 +141,14 @@ triangle_vec_to_matrix <- function(vec,
     names(annotlist) <-names(annotlist_gtype) <- names(explist)
     # ll <- list( annotlist, annotlist_gtype , annotlist_scSample)
     # names( ll ) <- c( "annotlist", "annotlist_gtype" , "annotlist_scSample")
-    saveRDS( ll, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.sc_annot.rda" )
+    saveRDS( ll, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.sc_annot.rda" )
   
 #### cross validate platforms base DS + pseudo-time based DS ####  
 
     ### make signatures combining results of DE
       {
         # get list of genes expressed in sc|sn RNAseq
-        SCSNpodogenes <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/podoSNgenes.rda")
+        SCSNpodogenes <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DE/podoSNgenes.rda")
         
         ### generated damage signatures
         MA_PDS <- damage_signature.func( FSGS_MA_DE, thresh = 0.75 , 
@@ -165,25 +165,25 @@ triangle_vec_to_matrix <- function(vec,
                                              thresh = 0.75, geneFilter = SCSNpodogenes )
         
         # use genes within top 2000 mean rank of expr. in sc.sn podocytes
-        scsnRNAseq_mean.rank <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
+        scsnRNAseq_mean.rank <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
         DS_all.2K <- damage_signature.func( DE_list , thresh = 0.75, 
                                             geneFilter = names(scsnRNAseq_mean.rank[1:2000]  ))
         
         ### signature based on ctype markers
-        podo_sc_DE <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DE/podoSCSN_DElist.04.04.22.rda")
+        podo_sc_DE <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DE/podoSCSN_DElist.04.04.22.rda")
         ctype_PDS <- damage_signature.func( podo_sc_DE, thresh = 0.75, 
                                             geneFilter = SCSNpodogenes )
         # reverse fold change so podocytes are "control"
         ctype_PDS$direction_foldchange <- -1*ctype_PDS$direction_foldchange
         
         ### sc/sn ptime signature
-        pseudo <- readRDS( file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/SCSNpseudoSig.rds")
+        pseudo <- readRDS( file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/SCSNpseudoSig.rds")
         
         ptime_PDS <-  damage_signature.func( list(pseudo,pseudo), thresh = 0 , 
                                              geneFilter = SCSNpodogenes )
           
         ###  previously used PDS
-        old_PDS <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/FSGS_markers0.75_36stud.rda")[[1]]
+        old_PDS <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/FSGS_markers0.75_36stud.rda")[[1]]
         old_PDS$gene_symbol <- rownames(old_PDS)
         # convert to lower case gene names
         allGenes <- Reduce( union , lapply(explist, rownames))
@@ -199,34 +199,34 @@ triangle_vec_to_matrix <- function(vec,
                              DS_all , old_PDS , ctype_PDS , ptime_PDS)
         names(DS_cv.list) <- c( "MA_DS" , "bulk_DS" , "sc_DS" , "bulkMA_DS" , 
                                  "all_DS" , "old_DS" , "ctype_DS","ptime_PDS" )
-        saveRDS(DS_cv.list , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.03.06.22.tsv")
+        saveRDS(DS_cv.list , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.03.06.22.tsv")
         
         # save tables
         write.table( MA_PDS , sep = "\t", row.names = F, 
-                    file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/MA_PDS.tsv")
+                    file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/MA_PDS.tsv")
         write.table( bulk_PDS , sep = "\t", row.names = F, 
-                    file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/bulk_PDS.tsv")
+                    file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/bulk_PDS.tsv")
         write.table( sc_PDS , sep = "\t", row.names = F, 
-                    file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/sc_PDS.tsv")
+                    file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/sc_PDS.tsv")
         # write.table( DS_all , sep = "\t", row.names = F, 
         #             file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DamageSignatures/DS_all.02.06.2022.tsv")
         write.table( bulkMA_PDS , sep = "\t", row.names = F, 
-                    file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/bulkMA_PDS.tsv")
+                    file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/bulkMA_PDS.tsv")
         write.table( ctype_PDS , sep = "\t", row.names = F, 
-                     file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/ctype_PDS.tsv")
+                     file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/ctype_PDS.tsv")
         write.table( old_PDS , sep = "\t", row.names = F, 
-                     file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/old2020_PDS.tsv")
+                     file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/old2020_PDS.tsv")
         write.table( ptime_PDS , sep = "\t", row.names = F, 
-                     file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/ptime_PDS.tsv")
+                     file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/ptime_PDS.tsv")
         write.table( DS_all.2K , sep = "\t", row.names = F, 
-                     file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.19.09.2023.tsv")
+                     file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.19.09.2023.tsv")
         write.table( DS_all.2 , sep = "\t", row.names = F, 
-                     file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+                     file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
       }
       
     ### make a corr plot of disease signatures
       {
-        DS_cv.list <- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.rda")
+        DS_cv.list <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.rda")
         
         ### combine scores in one df
         gg <-  Reduce( union, lapply( DS_cv.list , function(X) X$gene_symbol))
@@ -255,7 +255,7 @@ triangle_vec_to_matrix <- function(vec,
 
     ### calculate the damage score, using various signatures
       {
-        DS_cv.list <- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.tsv")
+        DS_cv.list <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.tsv")
         
         ### calculate DS using platform specific signatures
         # iterate over platforms
@@ -312,12 +312,12 @@ triangle_vec_to_matrix <- function(vec,
         ppg2 <- cowplot::plot_grid( PDS_plot[15:32],nrow = 5)
         ppg3  <- cowplot::plot_grid( PDS_plot[32:44], nrow = 4)
 
-      pdf(height = 12, width = 12, file = paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/",
+      pdf(height = 12, width = 12, file = paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/",
                           names(PDS.platforms)[jj],"_plot.pdf", sep = ""))
         print(ppg , ppg2, ppg3)
       dev.off()
 
-      png(height = 1000, width = 1000, file = paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/",
+      png(height = 1000, width = 1000, file = paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/",
                                                      names(PDS.platforms)[jj],"_plot.png", sep = ""))
         print(ppg , ppg2, ppg3)
       dev.off()
@@ -380,7 +380,7 @@ triangle_vec_to_matrix <- function(vec,
                                                                   label.y.npc = c(0.76,0.72,0.68) ,
                                                                   label.x.npc= c('center','center','center') )
         
-        pdf( height = 6, width = 12, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/platformsCV_onePlot_boxplot.pdf" )
+        pdf( height = 6, width = 12, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/platformsCV_onePlot_boxplot.pdf" )
         print( ppg )
         dev.off()
         
@@ -409,8 +409,8 @@ triangle_vec_to_matrix <- function(vec,
                             title = "average correlation pf PDS across sc-sn datasets" ,
                             addCoef.col="red", mar=c(0,0,1,0) )
       ### scatter plots for sc data 
-      # pdf( width = 8, height = 6, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PseudoTimeTrajectory/DSall.VS.ptime_SCSN.pCorr.pdf")
-      png( width = 400, height = 300, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PseudoTimeTrajectory/DSall.VS.ptime_SCSN.pCorr.png")
+      # pdf( width = 8, height = 6, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PseudoTimeTrajectory/DSall.VS.ptime_SCSN.pCorr.pdf")
+      png( width = 400, height = 300, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PseudoTimeTrajectory/DSall.VS.ptime_SCSN.pCorr.png")
       
       lapply( 1:12, function(ii){
         
@@ -499,11 +499,11 @@ triangle_vec_to_matrix <- function(vec,
 
     # laod annotation
     library(ggpubr)
-    annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+    annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
     annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
     
     ### load KFO data 
-    listSCSN.PDS <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDSlist_23.12.2022.rda")
+    listSCSN.PDS <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDSlist_23.12.2022.rda")
     listSCSN.PDS[[2]]$sample <- sub( "SID", "", listSCSN.PDS[[2]]$sample)
     listKFO_sub.smpl <- lapply( 1:3 , function(ii){
       datt <- listSCSN.PDS[[ii]]
@@ -554,7 +554,7 @@ triangle_vec_to_matrix <- function(vec,
 
             return(XX )
     }))
-    saveRDS(KFO_AUCell.indGene, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/snKFO.pergeneAUcell.05.rds")
+    saveRDS(KFO_AUCell.indGene, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/snKFO.pergeneAUcell.05.rds")
     
     
     
@@ -586,7 +586,7 @@ triangle_vec_to_matrix <- function(vec,
    #                        method = "spearman", use = "pairwise.complete")
    #  DS_all.AUcell <-   setNames( as.vector(DS_all.AUcell) , colnames(DS_all.AUcell) )
    # DS_all.AUcell <- DS_all.AUcell[ order(- abs(DS_all.AUcell))]
-   # saveRDS(DS_all.AUcell, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.AUcell.FSGScorr.rds")
+   # saveRDS(DS_all.AUcell, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.AUcell.FSGScorr.rds")
    # 
 
     
@@ -598,7 +598,7 @@ triangle_vec_to_matrix <- function(vec,
                "GSE126217", "GSE154955" , "GSE112116" , "GSE131266", 
                "GSE134327", "GSE110092", "GSE77717", "KFO.Wt1" )
     # annotation
-    annot_bulkStage <- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
+    annot_bulkStage <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
     # expression
     listBULK <- c( MA_explist , bulk_explist)
     
@@ -750,7 +750,7 @@ triangle_vec_to_matrix <- function(vec,
 
 ###  predict control VS experiment 
   { 
-    SCSN_PDSlist_limit <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS.42limit.rda")
+    SCSN_PDSlist_limit <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDS.42limit.rda")
     
     ### sc
     {
@@ -831,7 +831,7 @@ triangle_vec_to_matrix <- function(vec,
         
         return( XX)
       })
-      saveRDS(sc_AUCell.indGene.list, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/sc_AUCell.indGene.list.rds")
+      saveRDS(sc_AUCell.indGene.list, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/sc_AUCell.indGene.list.rds")
       
     }
     
@@ -873,7 +873,7 @@ triangle_vec_to_matrix <- function(vec,
                                     "cvlasso.CL.scGSE", "sslasso.CL.scGSE" )
       
    
-      cv.lasso_listALLcv.lasso_listALL# saveRDS(cv.lasso_listALL, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
+      cv.lasso_listALLcv.lasso_listALL# saveRDS(cv.lasso_listALL, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
       
       
     }
@@ -994,7 +994,7 @@ triangle_vec_to_matrix <- function(vec,
         return(freqq)
         
       })
-      saveRDS( stabcv.lassoCL_list , "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/tabcv.lassoCL_list.rda" )
+      saveRDS( stabcv.lassoCL_list , "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/tabcv.lassoCL_list.rda" )
       # find coefficients
       Y <-  stabcv.lassoCL4f_list[[6]][stabcv.lassoCL4f_list[[6]]==100]
       Y<- stabcv.lasso_list[[3]][stabcv.lasso_list[[3]]>30]
@@ -1011,7 +1011,7 @@ triangle_vec_to_matrix <- function(vec,
       cv.lasso_listALL
       names(cv.lasso_listALL) <- c("lasso.bulk" ,  "lasso.scKFO", "lasso.bulkANDsc" , 
                                    "lassoCL.bulk", "lassoCL.scKFO" , "lassoCL.bulkANDsc","PDS.42")
-      # saveRDS(cv.lasso_listALL, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
+      # saveRDS(cv.lasso_listALL, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
       
       
     }
@@ -1023,7 +1023,7 @@ triangle_vec_to_matrix <- function(vec,
 ### plot score VS alb/cre
   { 
   #   # combine models predicting FSGS lvls and class labels
-   cv.lasso_listALL <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
+   cv.lasso_listALL <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
     modelsPlot <- list( X[stabcv.lasso_list[[2]]>30], Y[stabcv.lassoCL_list[[2]]>30], cv.lasso_listALL[[7]])
     modelsPlot <- list(cv.lasso_list[[2]], cv.lasso_listCL[[2]],  cv.lasso_listALL[[7]])
     modelsPlot <- c(cv.lasso_listALL[c(2,3)] ,list(Y ), list(X ) )
@@ -1148,7 +1148,7 @@ triangle_vec_to_matrix <- function(vec,
     # DS_all$label.pred.SC42 <- ifelse(DS_all$gene_symbol %in%  names(cv.lasso_listALL[[5]]), "YES", "NO")
     # 
     write.table(DS_all , sep = "\t", quote = F, col.names = NA,
-                file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/DS_all.12.04.2023.tsv")
+                file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/DS_all.12.04.2023.tsv")
  
     
     ## combine plots for scKFO data
@@ -1225,7 +1225,7 @@ triangle_vec_to_matrix <- function(vec,
     return(XX)
    
     
-  saveRDS( perturb_test, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO.rda" )
+  saveRDS( perturb_test, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO.rda" )
   
   # make boxplot of results
   toPlot <- Reduce( rbind, lapply( perturb_test , function(X) {
@@ -1240,11 +1240,11 @@ triangle_vec_to_matrix <- function(vec,
          title = "randomisation effect on PDS\n tested on bulk Wt1.het.del")
   
   # save boxplots  
-  pdf(height = 6, width = 6, file =   "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO_plot.pdf")
+  pdf(height = 6, width = 6, file =   "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO_plot.pdf")
     print(ggp)
   dev.off()
   
-  png(height = 400, width = 400, file =   "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO__plot.png" )
+  png(height = 400, width = 400, file =   "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Pertrubation/RandomTest_bulkWt1.KFO__plot.png" )
     print(ggp)
   dev.off()
 }
@@ -1252,10 +1252,10 @@ triangle_vec_to_matrix <- function(vec,
 
 
 #### cross-validate damage types #### 
-annotations <- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.sc_annot.rda")
-DS_all<- read.table(header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
-explist <- readRDS(  file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.scPbulk.rda")
-XX <- readRDS(  file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.sc.rda")
+annotations <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.sc_annot.rda")
+DS_all<- read.table(header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+explist <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.scPbulk.rda")
+XX <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.sc.rda")
 names(explist) <- names(XX)
 
 ### clreate a list of models    
@@ -1286,7 +1286,7 @@ names(explist) <- names(XX)
     
   })
   names(CV_model.list_DS) <- names(CV_model.list)
-  saveRDS(CV_model.list_DS, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/CV_model.list_DS.rda")
+  saveRDS(CV_model.list_DS, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/CV_model.list_DS.rda")
   
 }
       
@@ -1318,7 +1318,7 @@ names(explist) <- names(XX)
     return(ll)
   })
   names( CV_model.list_PDS42 ) <- names(CV_model.list)
-  saveRDS( CV_model.list_PDS42, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.rda")
+  saveRDS( CV_model.list_PDS42, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.rda")
  
   # aggregate by sample 
   CV_model.list_PDS42.agg <- lapply( seq(CV_model.list), 
@@ -1368,15 +1368,15 @@ names(explist) <- names(XX)
       CV_model.list_PDS42.agg[[4]]$GSE117571$sample%in%c(
         "GSM3304015", "GSM3304016", "GSM3304017", "GSM3304018"), ]
   names(CV_model.list_PDS42.agg) <- names(CV_model.list_PDS42)
-  saveRDS( CV_model.list_PDS42.agg, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
+  saveRDS( CV_model.list_PDS42.agg, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
   
 }
 
 ### plot CV results
   {
-    GSE134327ann <- read.table( header = T, sep = ",","/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/GSE134327_SraRunTable.csv")
-    GSE168676ann <- read.table( header = T, sep = ",","/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/GSE168676_SraRunTable.csv")
-    CV_model.list_PDS42.agg <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
+    GSE134327ann <- read.table( header = T, sep = ",","/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/GSE134327_SraRunTable.csv")
+    GSE168676ann <- read.table( header = T, sep = ",","/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/GSE168676_SraRunTable.csv")
+    CV_model.list_PDS42.agg <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/CV_model.list_PDS42.sampAgg.rda")
     
     # scale PDS
     toPlot.list <- lapply(seq(CV_model.list_PDS42.agg), function(ii){
@@ -1426,11 +1426,11 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
         facet_wrap(facets = vars(dataset),scales = "free")
     
      gg0
-        pdf( height = 20, width = 20, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_Indv.test.pdf" )
+        pdf( height = 20, width = 20, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_Indv.test.pdf" )
         print( gg0 )
         dev.off()
         
-        png( height = 1800, width = 1500, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_Indv.png" )
+        png( height = 1800, width = 1500, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_Indv.png" )
         print( ppglist )
         dev.off()
         
@@ -1451,11 +1451,11 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
           stat_compare_means( size = 6 ) +
           facet_grid(cols = vars(CV_model),scales = "free")
         
-        pdf( height = 6, width = 12, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_agg.pdf" )
+        pdf( height = 6, width = 12, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_agg.pdf" )
         print( gg )
         dev.off()
         
-        png( height = 600, width = 1000, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_agg.png" )
+        png( height = 600, width = 1000, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/models/PDS_cv.models_boxplot_agg.png" )
         print( gg )
         dev.off()
   }
@@ -1479,8 +1479,8 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   })
   # name and save
   names(PDS.all) <-   names(PDS.42) <-     names(explist)
-  saveRDS( PDS.42, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/AUcell.42_PDSall.10.06.2022.rda")
-  saveRDS( PDS.all , "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/AUcell.all_PDSall.10.06.2022.rda")
+  saveRDS( PDS.42, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/AUcell.42_PDSall.10.06.2022.rda")
+  saveRDS( PDS.all , "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/AUcell.all_PDSall.10.06.2022.rda")
   
   # # pseudotime
   # PDS.ptime <-  lapply( seq(explist) , function(ii )
@@ -1523,14 +1523,14 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   ppg2 <- cowplot::plot_grid( plotlist=PDS_plot[15:32],nrow = 5)
   ppg3  <- cowplot::plot_grid( plotlist=PDS_plot[33:44], nrow = 4)
   
-  pdf(height = 12, width = 12, file =  "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/PDS.allPlatforms_all449_plot.pdf")
+  pdf(height = 12, width = 12, file =  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/PDS.allPlatforms_all449_plot.pdf")
   print( ppg1 )
   print( ppg2 )
   print( ppg3 )
   
   dev.off()
   
-  png(height = 1000, width = 1000, file = paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/",
+  png(height = 1000, width = 1000, file = paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/",
                                                  names(PDS.platforms)[jj],"_plot.png", sep = ""))
   print( ppg1 )
   print( ppg2 )
@@ -1567,13 +1567,13 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
                                                "wild type, 14 weeks","Ercc1[-/Δ], 14 weeks",
                                                "wild type, 96 weeks")) 
       ### GSE154955 
-      GSE154955_des <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/bulkRNAseq/expr_tabs/GSE154955_counts.rda")[[2]]
+      GSE154955_des <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/bulkRNAseq/expr_tabs/GSE154955_counts.rda")[[2]]
       GSE154955_des$groups <- factor(GSE154955_des$groups, levels = c("PBS", 
                       "D9 after ADR injection", "D14 after ADR injection" ))
       rownames(GSE154955_des) <- GSE154955_des$Run
       
       ### KFO.Nphs2 
-      annot <- read.table( sep = "\t", header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/bulk_NPHS2/NPHS2_Sample_NamesAll.csv")
+      annot <- read.table( sep = "\t", header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/07_bulk_Nphs2/from_WD/NPHS2_Sample_NamesAll.csv")
       rownames(annot) <- annot$CCG.Sample.ID
       annot$gtype_vec <- ifelse( annot$gtype=="wt" , "control","experiment")
       annot$groups <- paste(annot$gtype , annot$age , sep = "_")
@@ -1582,7 +1582,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       KFO.Nphs2_des <- annot
       
       ### KFO.Wt1
-      annot <- read.table( sep = "\t", header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/bulk_Wt1/annot_tab.csv")
+      annot <- read.table( sep = "\t", header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/01_bulkRNAseq_DEanalysis.KFO/Wt1_from_WD/annot_tab.csv")
       rownames(annot) <- annot$sample
       # make sure we compare experiment VS control
       annot$groups <- paste(annot$gtype, annot$age , sep = "_")
@@ -1622,11 +1622,11 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       
       ppg <- cowplot::plot_grid( plotlist = plotList , nrow = 2 )
       # save the figure
-      pdf(height = 8, width = 10, file ="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/bulkStages_jitterPlot.pdf" )
+      pdf(height = 8, width = 10, file ="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/bulkStages_jitterPlot.pdf" )
       print(ppg)
       dev.off()
       
-      png(height = 600, width = 800, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/bulkStages_jitterPlot.png")
+      png(height = 600, width = 800, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/bulkStages_jitterPlot.png")
       print( ppg )
       dev.off( )
     }
@@ -1643,7 +1643,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
                  "GSE112116", "GSE131266", "GSE134327", 
                  "GSE110092" ,"GSE77717" , "KFO.Wt1"   )
       
-      annot_bulkStage <- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
+      annot_bulkStage <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
       
       # calculate PDS
       blkData <- explist[ names(explist) %in% stud]
@@ -1686,7 +1686,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       datMean  <- Reduce( rbind, ll)
       
        # ad proteinuria
-        mgmg.Bulk <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/mgmg.Bulk.rda")
+        mgmg.Bulk <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/mgmg.Bulk.rda")
         datMean$mgmg <-  unlist(mgmg.Bulk) # group  Wt1h.d. KFO
         
         # add platform type annotation
@@ -1709,11 +1709,11 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
         gg
         
         # save the plot
-        pdf(height = 6, width = 9, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/PDS.42vsAlbCr_bul.pdf")
+        pdf(height = 6, width = 9, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/PDS.42vsAlbCr_bul.pdf")
         print(gg)
         dev.off()
         # save the plot
-        png(height = 500, width = 800, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/PDS.42vsAlbCr_bul.png")
+        png(height = 500, width = 800, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/PDS.42vsAlbCr_bul.png")
         print(gg)
         dev.off()
       
@@ -1722,13 +1722,13 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   #### sn KFO ####
     
      #plot correlation between PDS and albCr
-      source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+      source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
       ##  load Damage signature
-      DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+      DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
       # load data
-        listPodo <- c("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells.scDblFind_Seur_podo.rda",
-                      "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/decontX.allcells.scDblFind_Seur_podo.rda",
-                      "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Cem_data/Seurat/decontX.allcells_Seur_podo.pdss2.rda" )
+        listPodo <- c("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells.scDblFind_Seur_podo.rda",
+                      "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/decontX.allcells.scDblFind_Seur_podo.rda",
+                      "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/14_Cem/from_WD/Seurat/decontX.allcells_Seur_podo.pdss2.rda" )
                       
         listKFO <- lapply(seq(listPodo), function(ii)
           {
@@ -1764,12 +1764,12 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
           
         })
         names(listKFO.podo_seur.PDS )<-   c("Nphs2","Wt1","Pdss2")
-        saveRDS(listKFO.podo_seur.PDS,file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listKFO.podo_seur.PDS" )
-        # saveRDS(listKFO.podo_seur.PDS,file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listKFO.podo_seur.19.09.PDS" )
+        saveRDS(listKFO.podo_seur.PDS,file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listKFO.podo_seur.PDS" )
+        # saveRDS(listKFO.podo_seur.PDS,file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listKFO.podo_seur.19.09.PDS" )
 
         # laod annotation
         library(ggpubr)
-        annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+        annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
         annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
         
         # combine metadata from 3 experiments 
@@ -1851,9 +1851,9 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
 #### correlate PDS with SD length ####
 ### sic! its not possible for the same mice, but can be done for matched age/disease stages
 # nphs2 
-# SD.nphs2.meta <- readxl::read_xlsx(sheet = 1,"/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsSDlength/SD_length_per_image_Nphs2mut.2metadata.xlsx")
+# SD.nphs2.meta <- readxl::read_xlsx(sheet = 1,"/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsSDlength/SD_length_per_image_Nphs2mut.2metadata.xlsx")
 
-  SD.nphs2 <- readxl::read_xlsx(sheet = 1,"/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsSDlength/SD_length_per_image__Nphs2mut.xlsx")
+  SD.nphs2 <- readxl::read_xlsx(sheet = 1,"/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsSDlength/SD_length_per_image__Nphs2mut.xlsx")
   SD.nphs2$age <- sub( "_mut.*" ,"" , SD.nphs2$animal)
   SD.nphs2$strain <- gsub( ".*_mut_| .*" ,"" , SD.nphs2$animal)
   SD.nphs2$mouse <- gsub( ".*_mut_|_img.*| " ,"" , SD.nphs2$animal)
@@ -1862,7 +1862,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   SD.nphs2$age_simple <- ifelse(SD.nphs2$age=="04w", 4, "8_9")
   
   # pdss2 
-  SD.pdss2 <- read.csv(skip = 2,"/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsSDlength/STED_Makro_Werte__Pdss2mut.csv")
+  SD.pdss2 <- read.csv(skip = 2,"/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsSDlength/STED_Makro_Werte__Pdss2mut.csv")
   SD.pdss2 <- SD.pdss2[,1:6]
   SD.pdss2 <- SD.pdss2[ !is.na(SD.pdss2$average_SD) , ]
   SD.pdss2 <- SD.pdss2[SD.pdss2$GT %in% c("pdss2 mid","pdss2 hom","wt", "wt mid"),]
@@ -1940,7 +1940,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   
   gll <- cowplot::plot_grid( plotlist = list( gg0, gg3, gg4), nrow = 1)
   
-  pdf( height = 6, width = 16, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsSDlength/PDSvsSD_Nphs2Pdss2.pdf")
+  pdf( height = 6, width = 16, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsSDlength/PDSvsSD_Nphs2Pdss2.pdf")
   print(gll)
   dev.off()
   
@@ -1957,7 +1957,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   {
     ### prepare PDS ranked marker list
     # read PD signatures
-    # DS_cv.list <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.tsv")
+    # DS_cv.list <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/CrossValidation/platforms/DS_platform.list.tsv")
     DS_all <- read.table( sep = "\t", header = T, 
                           file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DamageSignatures/DS_all.02.06.2022.tsv")
       
@@ -1990,7 +1990,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
     
     #### for all datasets$
     # load bulk and pseudo-bulk
-    explist_scPbulk <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.scPbulk.rda")
+    explist_scPbulk <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.scPbulk.rda")
     # calculate RBO
     rbo_PDS <- lapply( seq(explist_scPbulk) , function(ii, ddepth=1000) 
       {
@@ -2005,10 +2005,10 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       })
     names(rbo_PDS) <- names(explist)
     
-    saveRDS( rbo_PDS , file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
+    saveRDS( rbo_PDS , file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
     
     # compute rbo for podocin
-    rbo.nphs2 <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_Nphs2.snRNAseq_podo.rda" )
+    rbo.nphs2 <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_Nphs2.snRNAseq_podo.rda" )
     toPlot <- data.frame( score= rbo.nphs2 , gt = annotlist[[34]])
     ggplot2::ggplot( toPlot , aes( x=score, color=gt)) + 
       scale_color_colorblind() +  geom_density(size=1.5) + 
@@ -2096,7 +2096,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   # ElbowPlot( listSCSN.1K_integrated , ndims = 50 ) 
   # DimPlot( listSCSN.1K_integrated, group.by = "gtypeDE" ,label = TRUE)
   
-  # saveRDS( listSCSN.1K_integrated , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.1K_integratedLayers.rda")
+  # saveRDS( listSCSN.1K_integrated , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.1K_integratedLayers.rda")
   
   
   sce_clust_SCE <- listSCSN.1K_integrated
@@ -2116,7 +2116,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
   sce_clust_SCE$groupSling <- ifelse(sce_clust_SCE$gtypeDE !="control", sce_clust_SCE$groupSling , "control")
   sce.sling <- slingshot::slingshot( sce_clust_SCE, reducedDim='UMAP.CCA',
                                      clusterLabels =sce_clust_SCE$groupSling )
-  saveRDS(sce.sling ,  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.1K_sling.ptime_sce.rda" )
+  saveRDS(sce.sling ,  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.1K_sling.ptime_sce.rda" )
   
   embedded <- embedCurves(sce.sling, "UMAP.CCA")
   embedded <- slingCurves(embedded)[[1]] # only 1 path.
@@ -2195,10 +2195,10 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
     {
 
       ## correlate with proteinuria
-      annot_mgmg <- read.table(header = T , sep = "\t", "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv" ,fill = T)
+      annot_mgmg <- read.table(header = T , sep = "\t", "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv" ,fill = T)
       
       # load rbo for sc
-      X <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_Nphs2.snRNAseq_podo.rda" )
+      X <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_Nphs2.snRNAseq_podo.rda" )
              
       
       ### collect differnt DS measures
@@ -2234,10 +2234,10 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       mean_tab$aucell.all.pbulk <- PDS.all.pbulk[mean_tab$sample]
       ### add rbo 
       # 42 markers
-      # rbo.42_PDS <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/rbo.42_PDSall.20.04.2022.rda")
+      # rbo.42_PDS <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/rbo.42_PDSall.20.04.2022.rda")
       mean_tab$rbo.42.pbulk <- rbo.42_PDS[["KFO.Nphs2_sc"]][mean_tab$sample]
       # all markers
-      # rbo_PDS <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
+      # rbo_PDS <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
       mean_tab$rbo.all.pbulk <- rbo_PDS[["KFO.Nphs2_sc"]][mean_tab$sample]
      
         
@@ -2263,10 +2263,10 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
     ## correlation with proteinuria for all studies
     {
       ## correlate with proteinuria
-      annot_mgmg <- read.table(header = T, sep = "\t","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv" ,fill = T)
+      annot_mgmg <- read.table(header = T, sep = "\t","/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv" ,fill = T)
       
         ### collect scores for sc
-      rr <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_KFO.snRNAseq_podo.rda")
+      rr <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/rbo.PDS_KFO.snRNAseq_podo.rda")
       # 42 and markers
       mean_tab <- cbind.data.frame(
         PDS.42=unlist(PDS.42[c("KFO.Wt1_sc","KFO.Nphs2_sc","KFO.Pdss2_sc")]) ,
@@ -2295,12 +2295,12 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
      
       ### add rbo 
       # 42 markers
-      rbo.42_PDS <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/rbo.42_PDSall.20.04.2022.rda")
+      rbo.42_PDS <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/rbo.42_PDSall.20.04.2022.rda")
       XX <- unlist( rbo.42_PDS[c("KFO.Wt1_sc","KFO.Nphs2_sc","KFO.Pdss2_sc")] )
       names(XX) <- sub(".*\\.","", names(XX))
       mean_tab$rbo.42.pbulk <- XX[mean_tab$sample]
       # all markers
-      rbo_PDS <- readRDS(  file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
+      rbo_PDS <- readRDS(  file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/rbo_PDSall.20.04.2022.rda")
         XX <- unlist( rbo_PDS[c("KFO.Wt1_sc","KFO.Nphs2_sc","KFO.Pdss2_sc")] )
       names(XX) <- sub(".*\\.","", names(XX))
       mean_tab$rbo.all.pbulk <- XX[mean_tab$sample]
@@ -2380,8 +2380,8 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
 
 #### charachterisation of PDS signature genes ####
   {
-    DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
-    allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+    DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+    allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
     
     ### top 42 markers
     DS_all.42 <- DS_all[ 1:42, ]
@@ -2420,7 +2420,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
                                              rev = T, n=20)
       #  save plots 
       library(viridis)
-      setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise")
+      setwd("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise")
       heatmaply::heatmaply(toPlot, colors =myColor , na.value	=  "grey25", 
                                        file = c("heatmaply_plot.pdf", "heatmaply_plot.png"),
                   width=1500, height= 1000)
@@ -2615,10 +2615,10 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
     ### gene expression of markers in bulk KFO
     {
       # load expression
-      Wt1bulk <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/bulk_Wt1/expr_IntExon_glvl.rda")
-      Wt1bulk_annot <- read.table(header=T , "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/bulk_Wt1/annot_tab.csv")
-      Nphs2bulk <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/bulk_NPHS2/Nphs2expr_IntExon_glvl.rda")
-      Nphs2bulk_annot <- read.table(header=T , "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/bulk_NPHS2/NPHS2_Sample_NamesAll.csv")
+      Wt1bulk <- readRDS( "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/01_bulkRNAseq_DEanalysis.KFO/Wt1_from_WD_nonWD/expr_IntExon_glvl.rda")
+      Wt1bulk_annot <- read.table(header=T , "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/01_bulkRNAseq_DEanalysis.KFO/Wt1_from_WD_nonWD/annot_tab.csv")
+      Nphs2bulk <- readRDS( "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/07_bulk_Nphs2/from_WD_nonWD/Nphs2expr_IntExon_glvl.rda")
+      Nphs2bulk_annot <- read.table(header=T , "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/07_bulk_Nphs2/from_WD_nonWD/NPHS2_Sample_NamesAll.csv")
       colnames(Nphs2bulk) <- sub( "_.*", "",  colnames(Nphs2bulk))
       
       Wt1bulk.podo <- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/wtPodo_bulkRNAseq/bulkRNAseq_podo_ExInt.rda")
@@ -2758,7 +2758,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       
       
      ### make vln plots 
-      listKFO.podo_seur.PDS <- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listKFOseur.PDS.rda")
+      listKFO.podo_seur.PDS <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listKFOseur.PDS.rda")
       source('~/PROJECTS/myCode/stacked_vlnPlot_seurat.R')
       
       # vln plots for individual genes
@@ -2793,7 +2793,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
                                             function(X) X$scsn.Rank )))
       names(scsnRNAseq_mean.rank)<-allPodoGenes.inter
       scsnRNAseq_mean.rank <- scsnRNAseq_mean.rank[order(scsnRNAseq_mean.rank)]
-      saveRDS(scsnRNAseq_mean.rank, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
+      saveRDS(scsnRNAseq_mean.rank, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/scsnRNAseq.podo_gene.inter_mean.rank.rda")
       
       # prepare for plot
       scsnRNAseq_means.melt <- Reduce( rbind, scsnRNAseq_means)
@@ -2954,7 +2954,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       # p2  <- enrichplot::emapplot_cluster(enrichplot::pairwise_termsim(
       #   DS.42_cProfiler$REACT.enrich), color = "pvalue", cex_label_group=1.2)
       # cowplot::plot_grid( plotlist =  list(p1,p2), nrow = 1, labels = c("GO","REACT"))
-     pdf(height = 4, width = 6, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/DS.42_cProfiler_GOclustered")
+     pdf(height = 4, width = 6, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/DS.42_cProfiler_GOclustered")
       print(gg)
      dev.off()
       

@@ -387,7 +387,7 @@ tx2gene <- getBM( attributes=c('ensembl_gene_id', 'external_gene_name',"refseq_m
     {
       older <- FSGSexpr11[[1]][,c(1,2,6,9,10,11 )]
       ### load sc, analysis in GSE146912_scAnalysis.r script
-      scDR<- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/scRNAseq_GSE146912/scRNAseq_GSE146912_DEtab.rda")
+      scDR<- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/GSE146912/from_WD/scRNAseq_GSE146912_DEtab.rda")
       sc_deDF <- scDR[[1]][,colnames(scDR[[1]])[c(F, T)]]
       ### load MA
       FSGS_MA_DE <-  readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DATA/MA_lfcRank.rda")
@@ -429,13 +429,13 @@ tx2gene <- getBM( attributes=c('ensembl_gene_id', 'external_gene_name',"refseq_m
     ### combine ranks
     {
       ### 11 studies used previously 
-      FSGSexpr11 <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/FSGSexpr11.rda")
+      FSGSexpr11 <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/FSGSexpr11.rda")
       older <- FSGSexpr11[[1]][,c(1,2,5,6,9:11 )]
       older_rank <- FSGSexpr11[[2]][,c(1,2,5,6,9:11 )]
       older_rank <- apply(older_rank, 2, rank, na.last="keep")
       
       ### load sc, analysis in GSE146912_scAnalysis.r script
-      scDR<- readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/scRNAseq_GSE146912/scRNAseq_GSE146912_DEtab.rda")
+      scDR<- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/GSE146912/from_WD/scRNAseq_GSE146912_DEtab.rda")
       sc_deDF <- scDR[[1]][,colnames(scDR[[1]])[c(F, T)]]
       sc_rankDF <- scDR[[2]][,colnames(scDR[[2]])[c(F, T)]]
       sc_rankDF <- apply(sc_rankDF, 2, rank, na.last="keep") 
@@ -500,7 +500,7 @@ tx2gene <- getBM( attributes=c('ensembl_gene_id', 'external_gene_name',"refseq_m
       topFSGS26 <- as.data.frame(topFSGS26)
       topFSGS26$meanLFC <- rowMeans( FSGS_XX[rownames(FSGS_rankM),][FSGS_lfcM,] , na.rm = T )
       
-      # write.table(FSGS26_0.8 , sep = "\t","/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/FSGS23_markers0.8_21stud.tsv")
+      # write.table(FSGS26_0.8 , sep = "\t","/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/FSGS23_markers0.8_21stud.tsv")
       
       FSGS26_0.8_top100 <- topFSGS26[order(topFSGS26$topFSGS26),][1:100,]
       FSGS26_0.8_top50 <- topFSGS26[order(topFSGS26$topFSGS26),][1:50,]
@@ -553,7 +553,7 @@ tx2gene <- getBM( attributes=c('ensembl_gene_id', 'external_gene_name',"refseq_m
 #### validate the classic disease score on Wt1 studies  #### 
   {
   # read marker genes
-  FSGS26_0.8 <- read.table("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/FSGS23_markers0.8_21stud.tsv")
+  FSGS26_0.8 <- read.table("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/FSGS23_markers0.8_21stud.tsv")
   FSGS26_0.8_top100 <- FSGS26_0.8[order(FSGS26_0.8$topFSGS26),][1:100,]
   FSGS26_0.8_top50 <- FSGS26_0.8[order(FSGS26_0.8$topFSGS26),][1:50,]
   FSGS26_0.8_top20 <- FSGS26_0.8[order(FSGS26_0.8$topFSGS26),][1:20,]

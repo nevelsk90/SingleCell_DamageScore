@@ -17,9 +17,9 @@ mallinfo::malloc.trim()
 gc()
 
 #### load DS ####
-# setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/HumanValidation")
+# setwd("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/HumanValidation")
 # calculate damage score
-source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
 source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 
  ### use all inclusive signature
@@ -28,7 +28,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
   tx2gene_human <- getBM(attributes=c('ensembl_gene_id', 'external_gene_name',"entrezgene_id"),  mart = ensembl_human)
 
   # load damage signatures
-  DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+  DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
   # convert gene names to human orthologs
   DS.HOMO <-  fun_homoTO.FROMmouse( gns = DS_all$gene_symbol, TO = F)
   DS_all.HOMO <-  DS_all
@@ -373,7 +373,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
   
     ### annotation 
       {
-      KPMP.annotation <- read.csv( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/metadata/e20f1612-849c-488e-a06c-3049098a4bb1_20230914_OpenAccessClinicalData.csv")  
+      KPMP.annotation <- read.csv( "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Metadata/from_WD_2026-10/metadata/e20f1612-849c-488e-a06c-3049098a4bb1_20230914_OpenAccessClinicalData.csv")  
       { 
         KPMP.annotation$AlbCr  <- factor( as.factor(KPMP.annotation$Albuminuria..mg...Binned. ),
                                               labels = c(NA,30,1500,150,400,750))
@@ -402,9 +402,9 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
          }
       
       ### original albinuria measurments
-       eGFR_continuos_BC_AU <-  readxl::read_xlsx("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/metadata/OP-BCAU5812-PlasmaBiomarkerDataFile-2022.xlsx")
-       AlbCre_continuos_BC_AU <-  readxl::read_xlsx( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/metadata/OP-BC_AU5812-UrineBiomarkerData-2022.xlsx")
-       AlbCre_continuos_MSDQ <-  readxl::read_xlsx( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/metadata/OP-MSDQ120-UrineBiomarkerData-2022.xlsx")
+       eGFR_continuos_BC_AU <-  readxl::read_xlsx("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Metadata/from_WD_2026-10/metadata/OP-BCAU5812-PlasmaBiomarkerDataFile-2022.xlsx")
+       AlbCre_continuos_BC_AU <-  readxl::read_xlsx( "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Metadata/from_WD_2026-10/metadata/OP-BC_AU5812-UrineBiomarkerData-2022.xlsx")
+       AlbCre_continuos_MSDQ <-  readxl::read_xlsx( "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Metadata/from_WD_2026-10/metadata/OP-MSDQ120-UrineBiomarkerData-2022.xlsx")
        
        # calculate ACR for MSDQ samples
        AlbCre_continuos_MSDQ$ACR <- AlbCre_continuos_MSDQ$`Urine Albumin Concentration (mg/dL)`/
@@ -440,11 +440,11 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
       #   IDintrst.albcr.cont  <- KPMP.annotation$Participant.ID[ !is.na(KPMP.annotation$AlbCr.cont)]
       #   
       #   KPMP.sn.avail <- read.table(sep = ",",header = T, fill=T, 
-      #                               "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/atlas_repository_filelist-20230926.csv")
+      #                               "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/atlas_repository_filelist-20230926.csv")
       #   IDavail.sn <- unique(KPMP.sn.avail$Participant.ID[KPMP.sn.avail$Workflow.Type=="Expression Matrix"])
       #   
       #   KPMP.sc.avail <- read.table(sep = ",",header = T, fill=T, 
-      #                               "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/atlas_repository_filelist-20230926_scRNAseq.csv")
+      #                               "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/atlas_repository_filelist-20230926_scRNAseq.csv")
       #   IDavail.sc <- unique(KPMP.sc.avail$Participant.ID[KPMP.sc.avail$Workflow.Type=="Expression Matrix"])
       #   
       #   IDintrst.all <- union( IDintrst, IDintrst.albcr.cont)
@@ -456,7 +456,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
       #                            IDretrive.sc_AlbCr.Prt=IDintrst2 %in%  IDavail.sc )
       #  
       #   write.table(IDretrive, sep = "\t", row.names = F, quote = F,
-      #               file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/AlbCre_patientID_snsc_AlbCr.Prt.tsv")
+      #               file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/human/KPMP/AlbCre_patientID_snsc_AlbCr.Prt.tsv")
       #   
       # }
      
@@ -471,11 +471,11 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         {
         ### read expression matrix and make a seurat obj
         lldir <- list.dirs( recursive = F, 
-                            path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/expression.matrix")
-        annot.mtx <- read.table( header = T,sep = ",","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/atlas_repository_filelist-20231204.csv")
+                            path = "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/expression.matrix")
+        annot.mtx <- read.table( header = T,sep = ",","/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/atlas_repository_filelist-20231204.csv")
         
         ### create seur obj
-        file.issue <- list.files( path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/expression.matrix", recursive = T)
+        file.issue <- list.files( path = "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/expression.matrix", recursive = T)
        file.issue[! basename( file.issue) %in% c("matrix.mtx.gz",
                                                   "features.tsv.gz",
                                                   "barcodes.tsv.gz")]
@@ -505,10 +505,10 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         names( seur.list ) <- make.unique( names(seur.list) )
          seur.list <- seur.list[!is.na(seur.list)]
         
-        saveRDS(seur.list, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMark.list.08.12.23.rda") 
+        saveRDS(seur.list, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMark.list.08.12.23.rda") 
 
         # merge all selected
-        seur.list <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMark.list.08.12.23.rda" )
+        seur.list <- readRDS( "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMark.list.08.12.23.rda" )
 
          seur <- merge( seur.list[[1]],
                        y = seur.list[2:length(seur.list)],
@@ -540,7 +540,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
           match(  seur$partID,KPMP.annotation$Participant.ID)]
         seur$Protocol<- KPMP.annotation$Protocol[ 
           match(  seur$partID,KPMP.annotation$Participant.ID)]
-        # saveRDS(seur, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr.CKD_dimred.27.09.23.rda")
+        # saveRDS(seur, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr.CKD_dimred.27.09.23.rda")
         # subset for plotting
         seur.sub <- subset( seur , downsample= 500 )
         # find cluster markers
@@ -549,7 +549,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         DoHeatmap( seur.sub, features =top10$gene )
         
         # make plots
-        # seur <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMarks.rda")
+        # seur <- readRDS("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_PodoMarks.rda")
         p1 <- DimPlot(seur.sub, label = T, shuffle = T)
         p2 <- DimPlot(seur.sub, shuffle = T,label = T, group.by = "partID")
         
@@ -560,7 +560,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         
         # select podo by cluster
         seur.podo <- subset( seur, id=5)
-        saveRDS(seur.podo, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_Podo_04.12.23.rda") 
+        saveRDS(seur.podo, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_Podo_04.12.23.rda") 
         
       }
     
@@ -569,11 +569,11 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         
         # sc
         lldir.sc <- list.dirs( recursive = F, 
-                               path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/expression.matrix")
-          annot.mtx.sc <- read.table( header = T,sep = ",","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/atlas_repository_filelist-20230927_scRNAseq.csv")
+                               path = "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/expression.matrix")
+          annot.mtx.sc <- read.table( header = T,sep = ",","/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/atlas_repository_filelist-20230927_scRNAseq.csv")
         
         # first check if you can read all files, modify folder names if that's the problem
-          file.issue <- list.files( path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/expression.matrix", recursive = T)
+          file.issue <- list.files( path = "/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/expression.matrix", recursive = T)
           file.issue <- file.issue[ ! basename( file.issue)%in%c("matrix.mtx.gz",
                                                     "features.tsv.gz",
                                                     "barcodes.tsv.gz")]
@@ -603,7 +603,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
                                                              sub( ".zip", "", annot.mtx.sc$File.Name ) ) ]
         seur.sc.list <- seur.sc.list[!is.na(seur.sc.list)]
         
-        saveRDS( seur.sc.list , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMark.08.12.23.rda") 
+        saveRDS( seur.sc.list , file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMark.08.12.23.rda") 
         
         # merge all selected
         seur <- merge( seur.sc.list[[1]],
@@ -612,7 +612,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         )
         seur$partID <- sub("_.*","",colnames(seur))
         seur <- subset( seur , subset= nFeature_RNA>500 & nFeature_RNA<10000)
-        # saveRDS(seur , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMarks.04.12.23.rda") 
+        # saveRDS(seur , file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMarks.04.12.23.rda") 
         
         # cluster and Dimred
         seur <- NormalizeData(seur)
@@ -632,10 +632,10 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         # run UMAP
         seur <- RunUMAP( seur, dims = 1:30 )
         seur$PodoMarks <- colMeans(seur@assays$RNA@data[ podoMarks,], na.rm = T)
-        saveRDS(seur, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMark.08.12.23.rda")
+        saveRDS(seur, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMark.08.12.23.rda")
         
         # make plots
-        # seur <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMarks.04.12.23.rda")
+        # seur <- readRDS("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_PodoMarks.04.12.23.rda")
         p1 <- DimPlot(seur, label = T, shuffle = T)
         p2 <- DimPlot(seur, shuffle = T,label = T, group.by = "partID")
         p3 <- FeaturePlot(seur, features = "PodoMarks")
@@ -644,12 +644,12 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
         
         # select podo by cluster
         seur.podo <- subset( seur, id=6 )
-        saveRDS(seur.podo, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_Podo_08.12.23.rda") 
+        saveRDS(seur.podo, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_Podo_08.12.23.rda") 
         
         }
       
       # ### extract.podocytes based on podo marks
-      # seur.list <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_27.09.23.rda")
+      # seur.list <- readRDS("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_27.09.23.rda")
       # 
       # KPMP.snRNAseq_podo.Seur  <- lapply(seq(seur.list), function(ii){
       #   datt<- seur.list[[ii]]
@@ -667,16 +667,16 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
       #                                   add.cell.ids=names(KPMP.snRNAseq_podo.Seur)
       # )
       # KPMP.snRNAseq_podo.Seur$partID <- sub("_.*","",colnames(KPMP.snRNAseq_podo.Seur))
-      # saveRDS(KPMP.snRNAseq_podo.Seur, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_podo_27.09.23.rda") 
+      # saveRDS(KPMP.snRNAseq_podo.Seur, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_podo_27.09.23.rda") 
       
     }
    
     ### calculate PDS for sc and snRNAseq
       {
     
-     KPMP.snRNAseq_podo.Seur <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_Podo_08.12.23.rda") 
-     KPMP.scRNAseq_podo.Seur <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_Podo_08.12.23.rda") 
-     seqType.sn <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/HUMAN/KPMP/snRNAseq/Seurat/seur.sn.types.rda")
+     KPMP.snRNAseq_podo.Seur <- readRDS( file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/KPMP_snRNAseq.AlbCr_Podo_08.12.23.rda") 
+     KPMP.scRNAseq_podo.Seur <- readRDS( file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/scRNAseq/Seurat/KPMP_scRNAseq.AlbCr_Podo_08.12.23.rda") 
+     seqType.sn <- readRDS("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/snRNAseq/Seurat/seur.sn.types.rda")
      seqType.sn$partID <- make.unique(seqType.sn$partID)
      # add seq type
      KPMP.snRNAseq_podo.Seur$seqType <- seqType.sn$seqType[ 
@@ -726,7 +726,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
        toPlot <- cbind(toPlot, KPMP.annotation.contn[
          match( toPlot$partID ,KPMP.annotation.contn$Participant.ID),
          -c(7, 10:13)])
-       saveRDS( toPlot , "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/HumanValidation/KPMP.all_scsnRNAseq_podo.PDS.aggregated.rda")
+       saveRDS( toPlot , "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/HumanValidation/KPMP.all_scsnRNAseq_podo.PDS.aggregated.rda")
        
        ### remove samples with fewer than 3 cells
        X <- table( KPMP.scsnRNAseq_podo.Seur$partIDsnsc)
@@ -787,7 +787,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
     ### correlation with clinical features
       {
     library(corrplot)
-        toPlot.filt <-readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/HumanValidation/KPMP.CKD.AKI_scsnRNAseq_podo.PDS.aggregated.rda")
+        toPlot.filt <-readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/HumanValidation/KPMP.CKD.AKI_scsnRNAseq_podo.PDS.aggregated.rda")
         
     ### all traits
     {         
@@ -942,7 +942,7 @@ source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 #### save dotplots plots for multiple studies   ####
   gg <- cowplot::plot_grid( gg1, gg2 , gg3 , align = "h" , nrow = 1)
   # save the plot
-  pdf(height = 8, width = 16, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/HumanValidation/PDS.42_Human.podo.jitter.v3.pdf")
+  pdf(height = 8, width = 16, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/HumanValidation/PDS.42_Human.podo.jitter.v3.pdf")
   print(gg )
   dev.off()
 

@@ -24,20 +24,20 @@ tx2prot <-  getBM( attributes=c("uniprotswissprot","uniprot_gn_id", 'external_ge
 
 ####  functions
   #  damage signature generator
-  source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/Universal_Damage_Signature_Tim_Paula_Version.R")
+  source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/Universal_Damage_Signature_Tim_Paula_Version.R")
   # calculate damage score
-  source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+  source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
   source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 
 # damage signature
-DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 
 ### load  KFO and GSE146912 podocyte data
   {
-  listPodo <- c("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells_Seur_podo.rda",
-                "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/decontX.allcells_Seur_podo.rda",
-                "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Cem_data/Seurat/decontX.allcells_Seur_podo.pdss2.rda" ,
-                "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Lmx1b/Seurat/decontX.allcells_Seur_podo.rda",
+  listPodo <- c("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells_Seur_podo.rda",
+                "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/decontX.allcells_Seur_podo.rda",
+                "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/14_Cem/from_WD/Seurat/decontX.allcells_Seur_podo.pdss2.rda" ,
+                "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/12_Lmx1b/from_WD/Seurat/decontX.allcells_Seur_podo.rda",
                 "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.btbr.rda",
                 "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.cd2ap.rda",
                 "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.doxo.rda",
@@ -59,11 +59,11 @@ DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseSc
     return(newSeu)
   })
   names(listSCSN )<- c("Nphs2","Wt1","Pdss2","Lmx1b","btbr","cd2ap","doxo","nephr.D1","nephr.D5")
-  saveRDS( listSCSN , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.22.12.23.rda")
+  saveRDS( listSCSN , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.22.12.23.rda")
   
   }
 
-# listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
+# listSCSN <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
 
 #### get list of genes detected in all experiments  ####
   
@@ -104,19 +104,19 @@ DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseSc
   } ) )
   colnames(allPodoGenes_mean) <- names(listSCSN)
   
-  saveRDS(allPodoGenes.uni, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.uni.rda")
+  saveRDS(allPodoGenes.uni, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.uni.rda")
   
-  saveRDS(allPodoGenes, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
-  saveRDS(allPodoGenes_mean, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes_mean.rda")
+  saveRDS(allPodoGenes, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+  saveRDS(allPodoGenes_mean, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes_mean.rda")
   
-  write.table(allPodoGenes_mean, sep = "\t", quote = F, col.names = NA, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes_mean.tsv")
+  write.table(allPodoGenes_mean, sep = "\t", quote = F, col.names = NA, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes_mean.tsv")
 
 
 #### calculate PDS for all cells  ####
   
   ### calculate PDS for podocytes
   # # load PDS signatures
-  # cv.lasso_listALL <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
+  # cv.lasso_listALL <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/ML/cv.lasso_listALL.rda")
   # geneSS<- cv.lasso_listALL[c(2,7)]
   
   # dont subsample, only balance genotypes
@@ -156,7 +156,7 @@ DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseSc
 
 #### downsample to 1 K per study  ####
   
-    listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
+    listSCSN <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda" )
   
     listSCSN_1K <- lapply( seq( listSCSN ), function(ii)
       {
@@ -191,7 +191,7 @@ DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseSc
   # SCSN_PDSlist_1K[[6]] <- merge(SCSN_PDSlist_1K[[6]], subset( SCSN_PDSlist_1K[[7]], subset= gtypeDE=="control"))
   
   
-  saveRDS( listSCSN_1K , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_1K.22.12.23.rda")
+  saveRDS( listSCSN_1K , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_1K.22.12.23.rda")
   
 
   
@@ -219,7 +219,7 @@ listSCSN.1K.sampl <- lapply( seq( listSCSN ), function(ii)
 names(listSCSN.1K.sampl ) <- names(listSCSN)
 names(listSCSN.1K.sampl) <- c( "Nphs2", "Wt1", "Pdss2", "Lmx1b", "btbr",
                                "cd2ap", "doxo", "nephr.D1", "nephr.D5" )
-saveRDS(listSCSN.1K.sampl , "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+saveRDS(listSCSN.1K.sampl , "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 
 
 
@@ -264,7 +264,7 @@ TFmouse_all <- unique( TFmouse_MAT$TF_Name)
     
   }))
   TF_MeanMed <- c(TF_MeanMed, "Zfp423")
-  saveRDS(TF_MeanMed, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFs_SNSC.podo.MeanMed.08.01.24.rda")
+  saveRDS(TF_MeanMed, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFs_SNSC.podo.MeanMed.08.01.24.rda")
 
   ### make a meme file with motifs 
   # read all meme mouse motifs
@@ -294,7 +294,7 @@ TFmouse_all <- unique( TFmouse_MAT$TF_Name)
 #                             method = "glmGamPoi" , 
 #                             residual.features = allPodoGenes )
 # 
-# saveRDS(listSCSN.PDS.sct , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDSlist.SCT_23.12.2022.rda" )
+# saveRDS(listSCSN.PDS.sct , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDSlist.SCT_23.12.2022.rda" )
 
 # ### study correlation of mean counts with gene lvlvs
 #   {
@@ -302,14 +302,14 @@ TFmouse_all <- unique( TFmouse_MAT$TF_Name)
 #   { 
 #     library(Seurat)
 #     ### load data after decontX
-#     X.decontX <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/decontX.allcells_Seur_podo.rda")
+#     X.decontX <- readRDS("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/decontX.allcells_Seur_podo.rda")
 #     X.decontX <- NormalizeData(X.decontX)
 #     # extract sample names
 #     ccnames1 <- gsub(".*_|-.*" , "", colnames(X.decontX) )
 #     ccnames11 <- gsub("_.*|SID" , "", colnames(X.decontX) )
 #     
 #     ### load data without ambient RNA filtering
-#     X <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/snRNAseq_Wt1hd_premRNA.4w12w25w.Seurat.Norm.rda")
+#     X <- readRDS("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/snRNAseq_Wt1hd_premRNA.4w12w25w.Seurat.Norm.rda")
 #     # celect podocytes of 12-24 weeks age
 #     ccnames22 <- sub("__.*" , "", colnames(X) )
 #     X <- subset( X , cells= colnames(X)[ ccnames22 %in% ccnames11] ) 
@@ -402,13 +402,13 @@ TFmouse_all <- unique( TFmouse_MAT$TF_Name)
 #   ### scRNAseq GSE146912 data
 #   { 
 #     library(Seurat)
-#     X.decontX <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/decontX.allcells_Seur_podo.rda")
+#     X.decontX <- readRDS("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/decontX.allcells_Seur_podo.rda")
 #     X.decontX <- NormalizeData(X.decontX)
 #     ccnames1 <- gsub(".*_|-.*" , "", colnames(X.decontX) )
 #     ccnames11 <- gsub("_.*|SID" , "", colnames(X.decontX) )
 #     
 #     # 
-#     X <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_WT1hetdel/Seurat/snRNAseq_Wt1hd_premRNA.4w12w25w.Seurat.Norm.rda")
+#     X <- readRDS("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/snRNAseq_Wt1hd_premRNA.4w12w25w.Seurat.Norm.rda")
 #     ccnames22 <- sub("__.*" , "", colnames(X) )
 #     X <- subset( X , cells= colnames(X)[ ccnames22 %in% ccnames11] ) 
 #     

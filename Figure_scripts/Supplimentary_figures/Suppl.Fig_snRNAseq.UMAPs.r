@@ -5,7 +5,7 @@ allPodoGenes <-  readRDS("PROJECTS/PDS/SCSN_allPodoGenes.rda")
 
 #### analyse pdss2 ####
 
-pdss2 <- readRDS ( "/media/tpadvits/WD_tim/PROJECTS/PODOCYTES/RNAseq/Cem_data/Seurat/Pdss2CoQ2_decontX.allcells_Seur.scDblFilt.rda" )
+pdss2 <- readRDS ( "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/14_Cem/from_WD/Seurat/Pdss2CoQ2_decontX.allcells_Seur.scDblFilt.rda" )
 pdss2 <- FindClusters( pdss2, resolution = 0.05 )
 pdss2 <- FindClusters( pdss2, resolution = 0.2 )
 

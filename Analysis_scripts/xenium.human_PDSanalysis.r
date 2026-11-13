@@ -16,14 +16,14 @@ gc()
 #### load functions
 source("/data/user/tpadvits/PROJECTS/PDS/AUCell_script.r")
 # load the podo damage signature
-DS_all <- read.table( header = T, "/data/user/tpadvits/PROJECTS/PDS/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/tables/DS_all.20.09.2023.tsv")
 
                
 
 #### create Seurat objects from all xenium samples and save them ####
 ### create Seurat objects
 # list Xenium folders
-listPaths <- list.dirs( recursive=F , "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/")
+listPaths <- list.dirs( recursive=F , "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/Data/20250514__090010__AG_Kann_KOELN_12052025")
 
 lapply( seq( listPaths) , function(ii)
 {
@@ -60,7 +60,7 @@ lapply( seq( listPaths) , function(ii)
   xenium.obj <- subset(xenium.obj , subset = nCount_Xenium > 0)
 
   
-  saveRDS(xenium.obj, file =paste0( "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/",
+  saveRDS(xenium.obj, file =paste0( "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/Data/20250514__090010__AG_Kann_KOELN_12052025",
                                     gsub("output-XETG00229__|__20250514__090126","",basename(listPaths)[ii]),"_Seurat.rda") )
   # return(xenium.obj)
   
@@ -98,7 +98,7 @@ source("/data/user/tpadvits/PROJECTS/scripts/crop_seurat_v1.R")
 
 #### read Xenium data and draw polygons
 list.seu <- list.files(pattern = "Seurat.RDS",full.names = T,
-                       path = "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/")
+                       path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat")
 # 0. Tell mapview to *leave coordinates alone*
 mapviewOptions(native.crs = TRUE)
 
@@ -144,7 +144,7 @@ xen_roi3 <-  Crop_custom( x=coords ,
 
 ## add cell-type annotation
 # # read Azimuth annotations for individual samples
-# ctype.ll <- list.files(full.names = T, pattern = "azimuth_pred.tsv","/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/Ind.Samples/Azimuth_ctype.pred/")[
+# ctype.ll <- list.files(full.names = T, pattern = "azimuth_pred.tsv","/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat/Ind.Samples/Azimuth_ctype.pred/")[
 #   1:16 ]
 
 ctype.ann <- read.table(ctype.ll[[7]], header = T, sep = "\t", row.names = 1)
@@ -161,11 +161,11 @@ ImageDimPlot(xen_roi3, fov = "fov", molecules = c("WT1"),
              mols.cols = "green",  boundaries = "segmentations")
 
 
-pathh="/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/Ind.Samples/"
+pathh="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat/Ind.Samples/"
 saveRDS(xen_roi3, file =paste0(pathh,  gsub("Seurat","Seurat__PID.01-00113..rep1",basename(list.seu)[ii])) )
 
 #### do cell type annotation ####
-list.seu2 <- list.files(pattern = "Seurat__PID", full.names = T, path = "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/Ind.Samples")
+list.seu2 <- list.files(pattern = "Seurat__PID", full.names = T, path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat/Ind.Samples")
 
 ### vln plot of nCount per sample
 ggl <- lapply(list.seu2, function(fname)
@@ -181,7 +181,7 @@ ggl <- lapply(list.seu2, function(fname)
 
 ggl0 <- cowplot::plot_grid( plotlist = ggl, nrow=2)
 
-pdf( width = 20, height = 10, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/xenium.Human_nCount.IndSample_VlnPlot.pdf")
+pdf( width = 20, height = 10, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/xenium.Human_nCount.IndSample_VlnPlot.pdf")
 print(ggl0)
 dev.off()
 
@@ -199,7 +199,7 @@ dev.off()
 # })
 
 ###  plot results of Azimuth annotation add cell-type annotation to Seurat obj
-ctype.ll <- list.files(full.names = T, pattern = "azimuth_pred.tsv","/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/Ind.Samples/Azimuth_ctype.pred/")[
+ctype.ll <- list.files(full.names = T, pattern = "azimuth_pred.tsv","/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat/Ind.Samples/Azimuth_ctype.pred/")[
   1:16 ]
 
 # read Azimuth annotations 
@@ -253,7 +253,7 @@ gg2<- ggplot2::ggplot(xenium_ctype_prcntg , aes(x=dataSet , y = nCells)) +
 
 ggl <- cowplot::plot_grid( plotlist = list(gg1, gg2), labels =c("Percentage", "Number of cells" ))
 
-pdf( width = 40, height = 20, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/ctype_Nmbr.Prct_braplot.pdf")
+pdf( width = 40, height = 20, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/ctype_Nmbr.Prct_braplot.pdf")
  print(ggl)
 dev.off()
 
@@ -275,7 +275,7 @@ lapply(list.seu2, function(fname)
 })
 
 ## plot ctypes
-list.seu4 <- list.files(pattern = "___ctype.RDS", full.names = T, path = "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/Seurat/Ind.Samples/Azimuth_ctype.pred")
+list.seu4 <- list.files(pattern = "___ctype.RDS", full.names = T, path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/analysis/Seurat/Ind.Samples/Azimuth_ctype.pred")
 
 
 lapply(list.seu4, function(fname)
@@ -300,7 +300,7 @@ lapply(list.seu4, function(fname)
 # eg https://github.com/pachterlab/SpatialFeatureExperiment/issues/10 
 library(SpatialOmicsOverlay)
 library(RBioFormats)
-img_fn <- "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/Spatial/20250514__090010__AG_Kann_KOELN_12052025/output-XETG00229__0060390__Region_2__20250514__090126/morphology.ome.tif"
+img_fn <- "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/In_house/spatial_Xenium_2025_Kann/Data/xenium/output-XETG00229__0060390__Region_2__20250514__090126/morphology.ome.tif"
 xml <- xmlExtraction(ometiff = img_fn[1]) # works!
 
 scanMeta <- parseScanMetadata(omexml = xml) # doesn't work
@@ -349,14 +349,14 @@ plot(img_test) # works
     return(coords.cntr)
   })
   names(podo.coord.l) <- gsub(".*Seurat__|.RDS","", basename(list.seu2))
-  saveRDS(podo.coord.l , file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Xenium.Human_centrds.coord.RDS")
+  saveRDS(podo.coord.l , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Xenium.Human_centrds.coord.RDS")
   
   
   ### plot glomerular cells with automatically annotated glom circles
   # read glom radii and centers
-  ll1 <-list.files(path = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/output.clust",
+  ll1 <-list.files(path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/output.clust",
                    pattern = "glom.coord", full.names = T)
-  ll2 <- list.files(path = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/output.clust",
+  ll2 <- list.files(path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/output.clust",
                     pattern = "glom.an", full.names = T)
   # plot results of KNN
   glom.plots <- lapply( seq(ll1), function(ii)
@@ -437,7 +437,7 @@ plot(img_test) # works
   glom.plots.filt <- lapply( glom.filt, "[[",1)
   ggl <- cowplot::plot_grid(plotlist = glom.plots.filt)
   
-  pdf( width = 20, height = 20, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/KNNfilt_glom.radii_spatialPlots.filtMan.pdf")
+  pdf( width = 20, height = 20, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/KNNfilt_glom.radii_spatialPlots.filtMan.pdf")
   print(ggl)
   dev.off()
   
@@ -454,7 +454,7 @@ plot(img_test) # works
 # {
 #   library("dbscan")
 #   
-#   podo.coord.l <- readRDS("/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Xenium.Human_centrds.coord.RDS")
+#   podo.coord.l <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Xenium.Human_centrds.coord.RDS")
 #  
 # 
 #   # diagnose data to select eps parameter fpr dbscan
@@ -497,8 +497,8 @@ glom.coord.l <- lapply( glom.filt, "[[", 2)
 glom.annot.l <- lapply( glom.filt, "[[", 3)
 
 names( glom.coord.l) <- names( glom.annot.l) <- gsub("__.*","", basename(ll1))
-saveRDS(glom.coord.l , file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
-saveRDS(glom.annot.l , file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
+saveRDS(glom.coord.l , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
+saveRDS(glom.annot.l , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
 
 ### aggregate molecules per glom
 good_molecules.agg.list <- lapply( seq(glom.coord.l), function(ii)
@@ -546,9 +546,9 @@ names(good_molecules.agg.list) <- names(glom.coord.l)
 
 
 ### calculate PDS per glom
-glom.coord.l <- readRDS(  file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
-glom.annot.l <- readRDS(  file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
-good_molecules.agg.list <-  readRDS("/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS/good_molecules.agg.list.RDS")
+glom.coord.l <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
+glom.annot.l <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
+good_molecules.agg.list <-  readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS/good_molecules.agg.list.RDS")
 
 DSpodo_musTOhomo_oneTOone <- read.table(header = T, "PROJECTS/PDS/DSpodo_musTOhomo_oneTOone.tsv")
 DS_all <- read.table(header = T, "PROJECTS/PDS/DS_all.20.09.2023.tsv")
@@ -654,7 +654,7 @@ dev.off()
 
 
 ## corelate PDS with AlbCr
-PID <- readxl::read_xlsx("/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Sample_&_Experiment_Metadata.xlsx",
+PID <- readxl::read_xlsx("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Sample_&_Experiment_Metadata.xlsx",
                          sheet = 3  )
 # add patient level metadata to the glomerular table
 glom.Stat.PDS$ForMe_ID <- gsub( "..rep.*|PID.", "", glom.Stat.PDS$sample)
@@ -667,7 +667,7 @@ glom.Stat.PDS$sex <- PID$Sex[ match(  glom.Stat.PDS$ForMe_ID, PID$ForMe_ID )]
 pheatmap::pheatmap(cor(glom.Stat.PDS.agg[,c( "Avg.square" , "Avg.PodoDen","Avg.PDSadj",
                                              "age", "ACR" ,"PDS")],  method = "spearman"))
 
-pdf( width = 8, height = 8, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS/PDSvsACR_scatter.pdf")
+pdf( width = 8, height = 8, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS/PDSvsACR_scatter.pdf")
 gg
 dev.off()
 
@@ -677,17 +677,17 @@ dev.off()
 
 ## load plygons manually drawn around gloms
 # prepare 
-glom.man.coord1 <-read.table(skip = 4, header = T, sep = ",", "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.csv")
+glom.man.coord1 <-read.table(skip = 4, header = T, sep = ",", "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.csv")
 
 ll <- list.files(pattern = "_coordinates.", 
-                 path = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Manual" ,full.names = T)
+                 path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Manual" ,full.names = T)
 glom.man.coord2 <- Reduce( rbind, lapply( seq(ll),function(ii){
   datt <- cbind(   Selection = sub( "_coordinates.csv" , "", basename(ll[[ii]])) , 
                    read.table(ll[[ii]], header = T, sep = ","))
   return(datt)
 } ))
 glom.man.coord <- rbind( glom.man.coord1 , glom.man.coord2 )
-write.table(glom.man.coord, row.names = F, sep = ",", file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.all.csv")
+write.table(glom.man.coord, row.names = F, sep = ",", file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.all.csv")
         
 glom.man.coord.sf <- st_as_sf(glom.man.coord, coords = c("X","Y") )
 
@@ -787,7 +787,7 @@ glom.grid_molecules.agg.list <- lapply( seq(glom.man_grid), function(ii)
   gc()
 })
 names(glom.grid_molecules.agg.list) <- glom.man.coord_polygons$Selection
-saveRDS(glom.grid_molecules.agg.list , file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Manual/PID.01.00143_glom.manSel_grid.10x10_molecules.agg.RDS")
+saveRDS(glom.grid_molecules.agg.list , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Manual/PID.01.00143_glom.manSel_grid.10x10_molecules.agg.RDS")
 
 
 
@@ -800,10 +800,10 @@ glom.man_grid.PDS <- lapply( seq(glom.grid_molecules.agg.list), function(ii){
   return(glom.man_grid[[ii]])
 })
 names(glom.man_grid.PDS) <- glom.man.coord_polygons$Selection
-saveRDS(glom.man_grid.PDS , file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS/PID.01.00143_glom.manSel_grid.20x20.PDS.RDS")
+saveRDS(glom.man_grid.PDS , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS/PID.01.00143_glom.manSel_grid.20x20.PDS.RDS")
 
 # # for indv glom
-glom.man_grid.PDS <- readRDS("/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS/PID.01.00143_glom.manSel_grid.10x10.PDS.RDS")
+glom.man_grid.PDS <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS/PID.01.00143_glom.manSel_grid.10x10.PDS.RDS")
 glom.man_grid.PDS.jnd <- do.call(rbind, glom.man_grid.PDS)
 plot(glom.man_grid.PDS.jnd["PDS"])
 
@@ -812,7 +812,7 @@ gg2 <- ggplot() +
   scale_fill_viridis_c() + theme_minimal()
 
 
-pdf( width = 10, height = 10, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS/10glom.grid.10x10_PDS.ggplot.pdf")
+pdf( width = 10, height = 10, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS/10glom.grid.10x10_PDS.ggplot.pdf")
 gg2
 dev.off()
 
@@ -840,13 +840,13 @@ PDS.perCell <- lapply( seq(glom.annot.l), function(ii)
                        geneIDname = "Hgenes")
 })
 names(PDS.perCell) <-  names(glom.annot.l)
-saveRDS(PDS.perCell, file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/PDS.perCell.RDS")
+saveRDS(PDS.perCell, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/PDS.perCell.RDS")
 
 
 #### calculate PDS per nuclei ####
 
-glom.coord.l <- readRDS(  file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
-glom.annot.l <- readRDS(  file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
+glom.coord.l <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.coord.filtMan.RDS")
+glom.annot.l <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/KNN_filtration/KNNfilt_glom.annot.filtMan.RDS")
 
 
 #### combine cell annotation by glom with PDS
@@ -892,7 +892,7 @@ nuc_molecules.agg.list <- lapply( seq(glom.annot.l), function(ii)
   gc()
 })
 names(nuc_molecules.agg.list) <- names(glom.coord.l)
-saveRDS(nuc_molecules.agg.list, file="/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/nuc_molecules.agg.list.RDS")
+saveRDS(nuc_molecules.agg.list, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/nuc_molecules.agg.list.RDS")
 
 ## PDS
 PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
@@ -1008,7 +1008,7 @@ PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
       theme(text =  element_text(size = 12))
     cowplot::plot_grid(plotlist = list(gg01,gg11,gg21,gg31,gg41,gg51,gg61,gg71,gg81), nrow = 3)
     
-    pdf( width = 4, height = 4, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Xenium_PID.01.00143_PDScellVSglom.square_scatter.pdf")
+    pdf( width = 4, height = 4, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Xenium_PID.01.00143_PDScellVSglom.square_scatter.pdf")
     print(gg01)
     dev.off()
     
@@ -1143,19 +1143,19 @@ PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
   gg3<- ggplot(toPlot2, aes( x = group , y = PDS.perCell, color=group )) + geom_boxplot() + 
     geom_point(position = position_jitter(width = 0.25, seed = 100))+  stat_compare_means() + theme_minimal()+ scale_color_colorblind()
 
-    pdf( width = 20, height = 20, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.DimPlot.v3.pdf")
+    pdf( width = 20, height = 20, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.DimPlot.v3.pdf")
   print(gg1)
   dev.off()
-  pdf( width = 7, height = 5, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.VlnPlot.pdf")
+  pdf( width = 7, height = 5, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.VlnPlot.pdf")
   print(gg2)
   dev.off()
-  pdf( width = 4, height = 5, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.Bxplt.pdf")
+  pdf( width = 4, height = 5, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Xenium_PID.01.00143_PDS.Bxplt.pdf")
   print(gg3)
   dev.off()
   
   ### per manually annotated gloms 
   {
-    glom.man.coord<- read.table(header = T,sep = ",","/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.all.csv")
+    glom.man.coord<- read.table(header = T,sep = ",","/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Glom_analysis/Manual/Block1_01-00143_sample-glom-coordinates.all.csv")
     glom.man.coord.sf <- st_as_sf(glom.man.coord, coords = c("X","Y") )
     glom.man.coord_polygons <- st_sf(
       group_by(glom.man.coord.sf , Selection) %>%
@@ -1209,7 +1209,7 @@ PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
 #### SD length analysis ####
 
   
-  SDglomAgg <- readxl::read_xlsx(sheet =3, "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/SDlength_per_area_Visium.xlsx")
+  SDglomAgg <- readxl::read_xlsx(sheet =3, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/SDlength_per_area_Visium.xlsx")
   
   ### plot aggregated SDlength per glom for one patient
   glom.Stat.PDSsel <- glom.Stat.PDS[ glom.Stat.PDS$sample=="PID.01-00143..rep2" , ]
@@ -1230,7 +1230,7 @@ PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
   
   
   ## plot SD measures with replicates for one patient
-  SDglom<- readxl::read_xlsx(sheet =2, "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/SDlength_per_area_Visium.xlsx")
+  SDglom<- readxl::read_xlsx(sheet =2, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/SDlength_per_area_Visium.xlsx")
   
   SDglom$PDS <- glom.Stat.PDSsel.agg$PDS.perNuc[
     match( SDglom$Glom_index , glom.Stat.PDSsel.agg$cluster )]
@@ -1243,7 +1243,7 @@ PDS.perNuc <- lapply( seq(glom.annot.l), function(ii)
   # # don't plot for all patientds as a random subset of gloms was chosen for each.
   # SDpat <- readxl::read_xlsx(sheet =1, "SDlength_per_area_Visium.xlsx")
   
-  pdf( width = 5, height = 5, file = "/data/user/tpadvits/PROJECTS/PDS/saptial_PDS/Xenium_Human/Xenium_PDScellVSsd.length_scatter.pdf")
+  pdf( width = 5, height = 5, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/spatial_PDS/Xenium_Human/Xenium_PDScellVSsd.length_scatter.pdf")
   print(gg2)
   dev.off()
   

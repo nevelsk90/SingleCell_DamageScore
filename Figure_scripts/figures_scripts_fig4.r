@@ -31,23 +31,23 @@ library( ComplexHeatmap )
 
 # setwd
 setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure4")
-inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
-source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
 source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 
 # load damage signatures
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 # load 
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 #### 1. analyse genes that correlate with PDS #### 
 
 ### count heatmap, shows N of studies where a gene (row) correlate with PDS in 
 ### control or experimental setting (columns)
   {
-  genecorrPDS.Sprmn_freq <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/genecorrPDS.Sprmn_freq.16.05.24.rda")
+  genecorrPDS.Sprmn_freq <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/genecorrPDS.Sprmn_freq.16.05.24.rda")
   
   
   ## decide in how many settings (gtype*study) a gene should correlate with PDS
@@ -305,19 +305,19 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
 
 #### 2. combining TRN with PDS to find interesting TFs #### 
 # load podo Paths/gsets
-PodoPathGSet <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PodoPathGSet.05.01.24.7plus.rda")
-circ.genes.bulk0.01 <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/bulk_circadian/circ.genes.bulk0.01.rda")
+PodoPathGSet <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PodoPathGSet.05.01.24.7plus.rda")
+circ.genes.bulk0.01 <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_bulk_circadian/circ.genes.bulk0.01.rda")
 PodoPathGSet_plus <- c(PodoPathGSet , circ.genes.bulk0.01=list(circ.genes.bulk0.01 ))
 ### load the prior
 # ## Wt1 and Tead1 Chipseq targets
-WT1wt2014_TFtc <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/Chipseq/Chipseq.WT1wt2014_TFtc.rda")
+WT1wt2014_TFtc <- readRDS( file="/cellfile/PROJECTS/podocyte_wt1_trn/trn_inference_TimPadvitski/Output/00_legacy_unassigned/WD_nonWD_Chipseq/Chipseq.WT1wt2014_TFtc.rda")
 WT1wt2014_TFtc.sig <- WT1wt2014_TFtc$score * ( WT1wt2014_TFtc$qvalue <0.3)
-Tead1wt2018_TFtc <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/Chipseq/Chipseq.Tead1wt2018_TFtc.rda")
+Tead1wt2018_TFtc <- readRDS( file="/cellfile/PROJECTS/podocyte_wt1_trn/trn_inference_TimPadvitski/Output/00_legacy_unassigned/WD_nonWD_Chipseq/Chipseq.Tead1wt2018_TFtc.rda")
 Tead1wt2018_TFtc.sig <-  Tead1wt2018_TFtc$score * ( Tead1wt2018_TFtc$qvalue <0.3)
 ## ATACseq prior
-# ATACseq_tgenesM.TFtc <- readRDS( file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/ATACseq_TFtc.tgenesM_77.TF.rda")
-# ATACseq_tgenesM <- readRDS( file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/ATACseq_tgenesM.rda")
-ATACseq_tgenes <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/ATACseq/Podocytes/TOBIAS/FIMO/atac.podo_tobias.fimo110TF.cut1.p5e4_TFtc.rda")
+# ATACseq_tgenesM.TFtc <- readRDS( file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/TFreg/ATACseq_TFtc.tgenesM_77.TF.rda")
+# ATACseq_tgenesM <- readRDS( file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/TFreg/ATACseq_tgenesM.rda")
+ATACseq_tgenes <- readRDS( "/cellfile/PROJECTS/podocyte_wt1_trn/trn_inference_TimPadvitski/Output/00_legacy_unassigned/WD_ATACseq/Podocytes/TOBIAS/FIMO/atac.podo_tobias.fimo110TF.cut1.p5e4_TFtc.rda")
 ATACseq_tgenes.S <- Reduce( cbind , lapply( ATACseq_tgenes , "[[", "score" ))
 ATACseq_tgenes.Q <- Reduce( cbind , lapply( ATACseq_tgenes , "[[", "qvalue" ))
 colnames(ATACseq_tgenes.S) <- colnames(ATACseq_tgenes.Q) <- names(ATACseq_tgenes)
@@ -357,7 +357,7 @@ ATACseq_tgenesM.podo <- ATACseq_tgenesM[ rownames( ATACseq_tgenesM ) %in% allPod
     
     ### network vew
     library(igraph)
-    TF_MeanMed <- readRDS(  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFs_SNSC.podo.MeanMed.08.01.24.rda")
+    TF_MeanMed <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/TFreg/TFA/TFs_SNSC.podo.MeanMed.08.01.24.rda")
     
     PodoTFnet <-ATACseq_tgenesM.podo[ (rownames(ATACseq_tgenesM.podo) %in% TF_MeanMed) & 
                                         rownames(ATACseq_tgenesM.podo) %in%  rownames(genecorrPDS.Sprmn_freq)[genecorrPDS.Sprmn_freq$total>=4], ]
@@ -498,7 +498,7 @@ ATACseq_tgenesM.podo <- ATACseq_tgenesM[ rownames( ATACseq_tgenesM ) %in% allPod
 
 ### Suppl. fig motif enrichment of geneSet promoters
   { 
-  mmotifs <- universalmotif::read_meme( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/ATACseq/Podocytes/TOBIAS/motif_clusters/motif_comparison_seqcor_Ward.cut.1_consensus_motifs.meme" )
+  mmotifs <- universalmotif::read_meme( "/cellfile/PROJECTS/podocyte_wt1_trn/trn_inference_TimPadvitski/Output/00_legacy_unassigned/WD_ATACseq/Podocytes/TOBIAS/motif_clusters/motif_comparison_seqcor_Ward.cut.1_consensus_motifs.meme" )
   # mmotifs <- universalmotif::read_meme( "/media/tim_nevelsk/WD_tim/ANNOTATIONS/CISBP/CISBP2mouse_podoTF_08.01.24.meme" )
     
     names(mmotifs) <- sapply(seq(mmotifs) , function(ii) mmotifs[[ii]]@name )
@@ -562,7 +562,7 @@ ATACseq_tgenesM.podo <- ATACseq_tgenesM[ rownames( ATACseq_tgenesM ) %in% allPod
 ### Suppl.Fig. plot basics of circadian bulk data
   {
   # load normilised by DEseq2 counts
-  dds_rlog.norm <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/bulk_circadian/bulkRNAseq.Kidney.cirk_rlog.rda")
+  dds_rlog.norm <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_bulk_circadian/bulkRNAseq.Kidney.cirk_rlog.rda")
   # remove one sample with very few counts
   countMat <- countMat[, colnames(countMat)!="SN8580185_21056_806Aligned.sortedByCoord.out.bam"]
   annot <- gsub(".*_|Aligned.*", "", colnames(countMat))
@@ -650,7 +650,7 @@ ATACseq_tgenesM.podo <- ATACseq_tgenesM[ rownames( ATACseq_tgenesM ) %in% allPod
 ### plot summary stat for CRD https://github.com/leihe2021/CRDscore/ 
   {
   
-  listSCSN.CRD_table <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/bulk_circadian/listSCSN.CRD_table.rda")
+  listSCSN.CRD_table <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_bulk_circadian/listSCSN.CRD_table.rda")
   # circ.genes <- circ.genes[ circ.genes%in% allPodoGenes]
   
   listSCSN.CRD_table$sampleDiscr <-  paste( listSCSN.CRD_table$sample , 
@@ -728,7 +728,7 @@ ATACseq_tgenesM.podo <- ATACseq_tgenesM[ rownames( ATACseq_tgenesM ) %in% allPod
 
 ### plot summary for Tempo results with Clock as reference  gene
   {    
-    tempo.out.list <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/circadian/tempo/tempo.out_probabilities_listSCSN.rda")
+    tempo.out.list <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/circadian/tempo/tempo.out_probabilities_listSCSN.rda")
     names(tempo.out.list) <- c("Arntl","Clock")
 
     ### extract max. probability and circ.time from tempo reults

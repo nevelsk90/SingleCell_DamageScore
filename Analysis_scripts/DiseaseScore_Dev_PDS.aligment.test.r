@@ -26,12 +26,12 @@ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/Sh
 # calculate damage score
 source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")
 
-DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 ### load subsampled sc data
-listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+listSCSN.1K.sampl <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 
 #### plot densitites ####
 ## density Plot of distributions
@@ -63,7 +63,7 @@ gg0 <- ggplot(toPlot ,
   theme_minimal()+ theme( legend.position = "bottom") + scale_color_colorblind()
 
 
-pdf( height = 5, width = 5, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSctrlVSxprmnt_density.Smpls.v2.pdf")
+pdf( height = 5, width = 5, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSctrlVSxprmnt_density.Smpls.v2.pdf")
 cowplot::plot_grid(plotlist =  list(gg00 , gg0), ncol = 1,
                    rel_heights =c(0.5,1, 4) )
 dev.off()

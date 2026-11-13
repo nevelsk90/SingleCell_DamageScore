@@ -23,12 +23,12 @@ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/Sh
 # calculate damage score
 source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")
 
-DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 ### load subsampled sc data
-listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+listSCSN.1K.sampl <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 
 
 ### define a vector of siyes to test 
@@ -112,13 +112,13 @@ listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/dise
                                          return(newSeu)
                                        })
     names(listSCSN.PDS_DSsizeTest) <- names(listSCSN.1K.sampl)
-    # saveRDS(listSCSN.PDS_DSsizeTest, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
+    # saveRDS(listSCSN.PDS_DSsizeTest, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
 
   }
   
 ### plot PDS distributions
   {
-   listSCSN.PDS_DSsizeTest<- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
+   listSCSN.PDS_DSsizeTest<- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
     
     ## prepare the table
     toPlot <- Reduce( rbind,  lapply( seq(listSCSN.PDS_DSsizeTest) , function(ii){
@@ -186,7 +186,7 @@ listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/dise
     # save plots for 2 groups, used for DE
     
 
-    pdf(height = 6, width = 12, file =  paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/SetSize/",
+    pdf(height = 6, width = 12, file =  paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/SetSize/",
                                                "PDS_sizeTest_ctrlVSxprmnt.medianDiff.plot.v3.pdf", sep = "") )
     print(ppg4)
     dev.off()
@@ -196,7 +196,7 @@ listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/dise
   
 ### test
   {
-    listSCSN.PDS_DSsizeTest<- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
+    listSCSN.PDS_DSsizeTest<- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.22.05.25.rda")
 
 
 
@@ -244,7 +244,7 @@ listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/dise
       ) + ylab("T-statistic") + xlab("Gene signature size")
     ppg5
     
-    pdf(height = 5, width = 10, file =  paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/SetSize/",
+    pdf(height = 5, width = 10, file =  paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/SetSize/",
                                                "PDS_sizeTest_ctrlVSxprmnt.tstat.plot.pdf", sep = "") )
     print(ppg5)
     dev.off()

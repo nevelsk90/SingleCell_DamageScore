@@ -12,7 +12,7 @@ mart  <- useEnsembl("ensembl",
 source("~/PROJECTS/scripts/extendGenes.coord_script.r")
 
 # PDS
-DS_all <- read.table(header = T, "/data/user/tpadvits/PROJECTS/PDS/DSpodo_musTOhomo_oneTOone.tsv")
+DS_all <- read.table(header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/tables/DSpodo_musTOhomo_oneTOone.tsv")
 
 #### prepare the data ####
 ### PDS
@@ -256,7 +256,7 @@ library(gwasrapidd)
       #### create extended ranges for all podo genes ####
       {
         ## all sc/snRNA-seq podocyte expressed genes
-        allPodoGenes <- readRDS("/data/user/tpadvits/PROJECTS/PDS/SCSN_allPodoGenes.rda")
+        allPodoGenes <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/tables/SCSN_allPodoGenes.rda")
         library(gprofiler2)
         PDSuniverse.h <- gorth(
           query   = allPodoGenes,
@@ -407,7 +407,7 @@ library(gwasrapidd)
         
         ## all sc/snRNA-seq podocyte expressed genes
         allHepatoGenes <- read.table(sep = ",",header = T,row.names = 1,
-                                     "/data/user/tpadvits/PROJECTS/PDS/GenesExpressedInHepatocytes.csv" )
+                                     "/cellfile/PROJECTS/damage_scores/hepatocyte_damage_score_PaulaUnger/_from_TimPadvitski/GenesExpressedInHepatocytes.csv" )
         allHepatoGenes <- allHepatoGenes$Genes
         HDSuniverse.h <- gorth(
           query   = allHepatoGenes,

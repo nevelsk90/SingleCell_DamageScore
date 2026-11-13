@@ -64,7 +64,7 @@ library("IsoformSwitchAnalyzeR")
 
 # read annotation
 allDesign <-read.table(sep = "\t", header = T,
-                       "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/RNA_seq/bulk_NPHS2mut./Sample_NamesAll.csv")
+                       "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Bulk/In_house/bulkRNA_Nphs2mut_HeChen/Metadata/sample_sheets/Sample_NamesAll.csv")
 
 
 myDesign <- data.frame( sampleID= allDesign$CCG.Sample.ID ,
@@ -72,7 +72,7 @@ myDesign <- data.frame( sampleID= allDesign$CCG.Sample.ID ,
 
 ### Import Salmon example data in R package
 salmonQuant <- importIsoformExpression(
-  parentDir = "/cellfile/datapublic/tpadvits/PROJECTS/PodocytePJ/RNA_seq/bulk_NPHS2mut./Salmon/",
+  parentDir = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Bulk/In_house/bulkRNA_Nphs2mut_HeChen/Data/processed/salmon",
   addIsofomIdAsColumn = TRUE
 )
 # clean sample names

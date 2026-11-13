@@ -7,7 +7,7 @@ library(ggpubr)
 library(RColorBrewer)
 library(ggeasy)
 # F to calculate damage score
-source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
 source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
 
 # release memory
@@ -19,7 +19,7 @@ gc()
 PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl","Ptpro","Magi2","Podxl")
 
 # podocyte damage signature
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 # convert gene names to human orthologs
 DS.HOMO <-  fun_homoTO.FROMmouse( gns = DS_all$gene_symbol, TO = F)
 DS_all.HOMO <-  DS_all
@@ -31,7 +31,7 @@ kidneyMarks_sc.Humphr <- read.csv(sep = ";","/media/tim_nevelsk/WD_tim/ANNOTATIO
 
 #### GSE182939 mouse data from Humphrey https://pubmed.ncbi.nlm.nih.gov/34853151/  ####
   {
-  ll<- list.dirs("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE182939_RAW", recursive = F)
+  ll<- list.dirs("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE182939/Data/GSE182939_RAW", recursive = F)
 lldir <- paste0( ll,"/outs")
 
 mm.kidney_sptl <- lapply(lldir, function(X){
@@ -70,7 +70,7 @@ mm.kidney_sptl.dimred <- lapply(seq(mm.kidney_sptl),
                                   return(sce.decontX.Seurat)
                                 })
 names( mm.kidney_sptl ) <- names( mm.kidney_sptl.dimred )<- basename( ll)
-saveRDS(mm.kidney_sptl.dimred, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
+saveRDS(mm.kidney_sptl.dimred, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE182939/Data/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
 
 
 ## annotate  podocytes
@@ -106,8 +106,8 @@ saveRDS(mm.kidney_sptl.dimred, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTE
 
 ### calculate PDS
 {
-  DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
-  mm.kidney_sptl.dimred <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
+  DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+  mm.kidney_sptl.dimred <- readRDS( file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE182939/Data/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
 
   
   ### for all cells
@@ -170,7 +170,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
 #### GSE171406 mouse data from KPMP human study https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10356613/#MOESM6 ####
   
     ll<- list.dirs(
-    "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE171406_RAW", 
+    "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE171406/Data/GSE171406_RAW", 
     recursive = F)[1:4]
   
   kidney.AKI_sptl <- lapply(ll, function(X){
@@ -214,7 +214,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                                     return(sce.decontX.Seurat)
                                   })
   names( kidney.AKI_sptl.dimred )<- basename( ll)
-  saveRDS(kidney.AKI_sptl.dimred, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE171406_RAW/kidney.AKI_sptl.dimred.rda")
+  saveRDS(kidney.AKI_sptl.dimred, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE171406/Data/GSE171406_RAW/kidney.AKI_sptl.dimred.rda")
   
   
   ## annotate  podocytes
@@ -252,7 +252,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     
     # plot UMAP for podocyte annotations
     
-    pdf( width =  10 , height = 12 , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE171406/GSE171406_AUCell.podo_plots.pdf")
+    pdf( width =  10 , height = 12 , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE171406/GSE171406_AUCell.podo_plots.pdf")
     # a<-dev.cur()
     # png( width =  600 , height = 3200 , file="AUCell_sztk.sc21_hist.png")
     # dev.control("enable")
@@ -267,8 +267,8 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
   
   ### calculate PDS
   {
-    DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
-    kidney.AKI_sptl.dimred.mm <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
+    DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+    kidney.AKI_sptl.dimred.mm <- readRDS( file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Spatial/Public/spatial_GSE182939/Data/GSE182939_RAW/mm.kidney_sptr.Seur_dimred.rda")
     
     
     ### for all cells
@@ -336,7 +336,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
   ### format coordinate files to use with Python scripts
     {
     # read spatial info
-    dir <- "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/beadLoc_qc/"
+    dir <- "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/beadLoc_qc/"
     ffile <- list.files( path = dir, pattern = "_qc.csv",full.names = T )
     
     # BTBR mouse samples are 13w.old
@@ -353,19 +353,19 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     {
     
     ## read spatial info
-    dir <- "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/beadLoc_qc/"
+    dir <- "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/beadLoc_qc/"
     ffile <- list.files( path = dir, pattern = "_qc.csv" , full.names = T )
     
     slideFile <- lapply(seq(ffile) , function(ii){
       ReadSlideSeq( coord.file = ffile[[ii]], assay = "Spatial")
       })
     names(slideFile) <- sub("_.*","",basename(ffile))
-    # saveRDS(slideFile, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_beadslocation.qc.list.rda")
-    slideFile <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_beadslocation.qc.list.rda")
+    # saveRDS(slideFile, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_beadslocation.qc.list.rda")
+    slideFile <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_beadslocation.qc.list.rda")
     
     ###  create Seurat objects
     # read in count data from sparse matrices
-    expr.qc <- readRDS(file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_DGE.qc.list.rda")
+    expr.qc <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_DGE.qc.list.rda")
     # dims sapply(expr.qc, ncol)[c(1:5,45:49)]
     # 30344 24438 30182 29011 15592 12541 12533 22430 11005 28577 20424
 
@@ -383,7 +383,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                                 return(seur)
                               })
     names(seur.list.BTBR) <- annot.GSE190094$geo_accession[annot.GSE190094$`age:ch1`=="13 week"]
-    saveRDS( seur.list.BTBR , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_BTBR.seur.rda")
+    saveRDS( seur.list.BTBR , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_BTBR.seur.rda")
 
     ### QC plots
     
@@ -406,10 +406,10 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     
     }
   
-  seur.list.BTBR <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_BTBR.seur.rda")
+  seur.list.BTBR <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_BTBR.seur.rda")
   ### annotate podocytes manually using podo markers
   # filter clusteres with the average coverage < 100 features per bead
-  # save filtered data and plot UMAPs here /media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/filtered.by.nFeatr  
+  # save filtered data and plot UMAPs here /cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/filtered.by.nFeatr  
   ### plot podocytes cluster before and after filterings
   lapply( 1:49, function(ii)
     {
@@ -497,12 +497,12 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       ggl <- cowplot::plot_grid( plotlist = 
                                    list(pp0,pp1,pp2,pp3,pp4,pp5), nrow = 2)
       
-      png( width = 2000 , height = 1000, file = paste0( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/filtered.by.nFeatr/",
+      png( width = 2000 , height = 1000, file = paste0( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/filtered.by.nFeatr/",
                                                         unique(sce.decontX.Seurat.filt$geoID),"_",ii,".png"))
       print(ggl)
       dev.off()
       
-      saveRDS(sce.decontX.Seurat.filt, file= paste0( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/filtered.by.nFeatr/",
+      saveRDS(sce.decontX.Seurat.filt, file= paste0( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/filtered.by.nFeatr/",
                                                      unique(sce.decontX.Seurat.filt$geoID),"_",ii,".rda"))
       
     }
@@ -519,7 +519,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
   ### select 8 test samples with higher coverage
     {
     testIDs <- sub( "_.*", "", list.files(pattern = ".*BeadLocationsForR_qc",
-                                          path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/test8") )
+                                          path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/test8") )
     
     names(seur.list.BTBR) <-  annot.GSE190094$geo_accession[ 
       which(annot.GSE190094$`age:ch1`=="13 week")]
@@ -559,7 +559,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
         
         ### find variable features
         seur.BTBR.podo <- NormalizeData( seur.BTBR.podo )
-        saveRDS( seur.BTBR.podo , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_BTBR.Podocyte.seur.rda")
+        saveRDS( seur.BTBR.podo , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_BTBR.Podocyte.seur.rda")
         
         # bio replicates
         seur.BTBR.podo$sampleBio <- stringr::str_sub(seur.BTBR.podo$sampleID, end = -2)
@@ -573,10 +573,10 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       }
       
       
-      DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+      DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
       
       # selected by authors
-      seur.BTBR.podo <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/GSE190094_BTBR.Podocyte.seur.rda")
+      seur.BTBR.podo <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/GSE190094_BTBR.Podocyte.seur.rda")
       seur.BTBR.podo <- subset( seur.BTBR.podo, subset= geoID %in% c("GSM5713342","GSM5713369","GSM5713371", "GSM5713375","GSM5713376","GSM5713378"))
       
       # select based on clusters
@@ -625,7 +625,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       test_geoID <- annot.GSE190094$geo_accession[ testIDs ]
       
       # list of all samples with detectable podocytes
-      ll<- list.files(pattern = "rda",full.names = T,"/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/filtered.by.nFeatr")
+      ll<- list.files(pattern = "rda",full.names = T,"/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/filtered.by.nFeatr")
       names(ll) <- sub( "_.*", "", basename(ll))
     
       ### filtr out clusters with average less than 100 features per bead and plot annot.BTBR.pdclust
@@ -670,18 +670,18 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                 ggl <- cowplot::plot_grid( plotlist = list(pp1,pp2, pp3), nrow = 1)
                 
                 
-                png(height = 600, width = 1800, filename = paste0("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
+                png(height = 600, width = 1800, filename = paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
                                                                   test_geoID[ii],"_filt.Dimplot.png"))
                 print(ggl)
                 dev.off()
                 
-                saveRDS( seur , file= paste0("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/",
+                saveRDS( seur , file= paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/",
                                              test_geoID[ii], "_filtSeur.rda"))
                 gc()
               })
       
       ### plot podocyteMarker expr and cluster marker heatmaps
-      ll.filt <- list.files(pattern = "rda",full.names = T,"/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/filtSeur")
+      ll.filt <- list.files(pattern = "rda",full.names = T,"/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/filtSeur")
       names(ll.filt) <- sub( "_.*", "", basename(ll.filt))
       
       seur.BTBR_podoClustID <-  lapply( seq(ll.filt),
@@ -703,7 +703,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                 # # plot podoMarks
                 # pp0 <- VlnPlot( seur , features = c("PodoMarks","nFeature_Spatial"))
                 # 
-                # png(height = 400, width = 1000 , filename = paste0("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
+                # png(height = 400, width = 1000 , filename = paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
                 #                                                 test_geoID[ii],"_filt.podoMarks_vln.png"))
                 # print(pp0)
                 # dev.off()
@@ -717,7 +717,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                 # top10 <- seur.clustMarks %>% group_by(cluster) %>% top_n(n = 10, wt = avg_log2FC)
                 # pp <- DoHeatmap( seur.sub, features =top10$gene )
                 # 
-                # pdf(height = 20, width = 20 , filename = paste0("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
+                # pdf(height = 20, width = 20 , filename = paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
                 #                                                   test_geoID[ii],"_filt.clustMarks_heatmap.pdf"))
                 # print(pp)
                 # dev.off()
@@ -745,7 +745,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                                           # # plot podoMarks
                                           # pp0 <- VlnPlot( seur , features = c("PodoMarks","nFeature_Spatial"))
                                           # 
-                                          # png(height = 400, width = 1000 , filename = paste0("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
+                                          # png(height = 400, width = 1000 , filename = paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
                                           #                                                 test_geoID[ii],"_filt.podoMarks_vln.png"))
                                           # print(pp0)
                                           # dev.off()
@@ -759,7 +759,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                                           # top10 <- seur.clustMarks %>% group_by(cluster) %>% top_n(n = 10, wt = avg_log2FC)
                                           # pp <- DoHeatmap( seur.sub, features =top10$gene )
                                           # 
-                                          # pdf(height = 20, width = 20 , filename = paste0("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
+                                          # pdf(height = 20, width = 20 , filename = paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/",
                                           #                                                   test_geoID[ii],"_filt.clustMarks_heatmap.pdf"))
                                           # print(pp)
                                           # dev.off()
@@ -775,7 +775,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       barplot(table( seur.BTBR_podo$sampleID[ seur.BTBR_podo$PodoMarks>0]))
       abline(h =100, col="red", lwd=1)
       
-      saveRDS( seur.BTBR_podo , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/seur.BTBR_podo.rda")
+      saveRDS( seur.BTBR_podo , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/seur.BTBR_podo.rda")
       
       
       ### calculate PDS
@@ -822,7 +822,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
              scale_fill_colorblind()+ggtitle( testIDs[ii])
          })
          ggn <- cowplot::plot_grid( plotlist = gglist , nrow  = 2)
-         png(width = 2000, height = 800, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/SpatialDimPlot_podoFilt.png",
+         png(width = 2000, height = 800, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/SpatialDimPlot_podoFilt.png",
          )
          print(ggn)
          dev.off()
@@ -831,7 +831,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       ### Spatial plots  for glomerular annotations after KNN clustering
         {
         ll <-  list.files(pattern = ".*_glom_annot",full.names = T,
-                          path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/test8")
+                          path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/test8")
         glom_annot.list <- lapply(ll, read.csv, row.names=1)
         names(glom_annot.list) <- sub("_.*","",basename(ll))
         
@@ -857,7 +857,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
         })
         ggn <- cowplot::plot_grid( plotlist = gglist , nrow  = 2)
         
-        png(width = 2000, height = 800, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/SpatialDimPlot_glomAnnot.png",
+        png(width = 2000, height = 800, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/SpatialDimPlot_glomAnnot.png",
         )
         print(ggn)
         dev.off()
@@ -916,7 +916,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
            
            ggn <- cowplot::plot_grid(plotlist = list(gg1,gg2), nrow  = 2)
            
-           png(width = 600, height = 800, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_glomAnnotVSaggPodoPerGlom.png",
+           png(width = 600, height = 800, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_glomAnnotVSaggPodoPerGlom.png",
            )
            print(ggn)
            dev.off()
@@ -985,7 +985,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
            
            ggn <- cowplot::plot_grid(plotlist = list(gg1,gg2,gg3), nrow  = 3)
            
-           png(width = 600, height = 1200, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_vs_PDSaggGloms.png",
+           png(width = 600, height = 1200, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_vs_PDSaggGloms.png",
            )
            print(ggn)
            dev.off()
@@ -1001,7 +1001,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       {
      
       ll.seur <- list.files( pattern = "rda" , full.names = T,
-                        path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/filtSeur/")
+                        path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/filtSeur/")
       names(ll.seur) <- sub( "_.*", "", basename(ll.seur))
       # # select 8 test samples
       # ll <- ll[ sub( "_.*","",basename(ll)) %in% testIDs ] 
@@ -1009,7 +1009,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       
       # read in OG cell annotations 
       ll.anot <-list.files( pattern = "BeadLocationsForR" , full.names = T,
-                       path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/beadLocPython_qc" )
+                       path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/beadLocPython_qc" )
       names( ll.anot) <-  sub( "_.*", "", basename(ll.anot))
       ll.anot <- ll.anot[names(ll.seur) ]
       OG_ctypes <- lapply( ll.anot,  read.csv , row.names=1)
@@ -1037,10 +1037,10 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
                                           "PodoTim", NA)
 
           write.csv( og_annot[ !is.na( og_annot$timPodo_annot) , 1:3],
-                   file=  paste0("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/BeadLocationsPodoTim_2/",
+                   file=  paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/BeadLocationsPodoTim_2/",
                                  names(ll.anot)[ii],"_BeadLocationsPodoTim.csv"))
           # write.csv( og_annot[ , 1:3],
-          #            file=  paste0("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/ogBeadLocations/",
+          #            file=  paste0("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/ogBeadLocations/",
           #                          names(ll.anot)[ii],"_ogBeadLocations.csv"))
       })
       
@@ -1050,7 +1050,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     ### read results of KNN filtration, adjust global annotation accordingly
       {
       ll <-  list.files( pattern = "Tim_eroded.csv" , full.names = T,
-                              path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/BeadLocationsPodoTim/" )
+                              path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/BeadLocationsPodoTim/" )
       PodoTim_filtered <- lapply( ll , read.csv , row.names=1 )
       
       lapply( seq( PodoTim_filtered) , function(ii)
@@ -1079,12 +1079,12 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     
     ### read results of glom annotation
      ll <-list.files( pattern = "glom_annot" , full.names = T,
-                     path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/BeadLocationsPodoTim/" )
+                     path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/BeadLocationsPodoTim/" )
     TimGlom_ctypes <- lapply( ll,  read.csv , row.names=1)
     names(TimGlom_ctypes) <- sub( "_.*","",basename(ll))
     
     ll.seur <- list.files( pattern = "rda" , full.names = T,
-                      path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/filtSeur/")
+                      path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/filtSeur/")
     names(ll.seur) <- sub( "_.*", "", basename(ll.seur))
     ll.seur <- ll.seur[names(TimGlom_ctypes)]
     
@@ -1156,7 +1156,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       
       ggn <- cowplot::plot_grid(plotlist = list(gg1,gg2,gg3), nrow  = 3)
       
-      png(width = 600, height = 1200, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_vs_PDSaggGloms_TimAnnot.png",
+      png(width = 600, height = 1200, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/test8/nFeatures_vs_PDSaggGloms_TimAnnot.png",
       )
       print(ggn)
       dev.off()
@@ -1168,7 +1168,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       {
       # read glom stat 
       ll <-list.files( pattern = "_glom_coord" , full.names = T,
-                       path = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/BeadLocationsPodoTim/" )
+                       path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/BeadLocationsPodoTim/" )
         
         TimGlom_coord_list <- lapply( ll,  read.csv , row.names=1)
       names(TimGlom_coord_list) <- sub( "_.*","" , basename(ll))
@@ -1222,7 +1222,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       TimGlom_coord$nFeatures <- featuresPERglom$nFeature_Spatial
       TimGlom_coord$gtype <- factor( as.factor(TimGlom_coord$gtype), 
                                      levels = c("BTBR-wt/wt","BTBR-ob/ob"))
-      # saveRDS(TimGlom_coord , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/TimGlom_coord.rda")
+      # saveRDS(TimGlom_coord , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/TimGlom_coord.rda")
         
       ### plot coorHeatmap
       {
@@ -1298,7 +1298,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
         
         gg <- cowplot::plot_grid( plotlist = list(gg2,gg1), nrow = 1, rel_widths = c(2,1))
         
-        pdf( width = 8, height = 6 , file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/Glom.metrics_scatter.bxplts.test.pdf")
+        pdf( width = 8, height = 6 , file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Spatial.trnscrptm/GSE190094/BTBR/podoClust/Glom.metrics_scatter.bxplts.test.pdf")
         print(gg)
         dev.off()
         
@@ -1317,7 +1317,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
           scale_color_gradientn( colours = brewer.pal( n = 9 , name = "YlOrBr"))+
           scale_fill_gradientn( colours = brewer.pal( n = 9 , name = "YlOrBr"))
         
-        seur <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/GSE190094_RAW/BTBR/podoClust/filtSeur/GSM5713367_filtSeur.rda")
+        seur <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/spatial_GSE190094/BTBR/podoClust/filtSeur/GSM5713367_filtSeur.rda")
         seur$glom.KNN <-  TimGlom_ctypes$GSM5713367$cell_type[ match( colnames(seur),
                                                                       TimGlom_ctypes$GSM5713367$barcode)]
         seur$glom.KNN[!is.na(seur$glom.KNN)] <- "glom" 
@@ -1335,7 +1335,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
   
 #### KPMP patient 29.10282 ####
   
-    kpmp.sptl_29.10282 <- Read10X("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/deb3c13e-b49f-4812-9932-3760a3f20dd8_expression_matrix")
+    kpmp.sptl_29.10282 <- Read10X("/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/deb3c13e-b49f-4812-9932-3760a3f20dd8_expression_matrix")
     kpmp.sptl_29.10282.seur <- CreateSeuratObject(kpmp.sptl_29.10282, assay="Spatial")
     
     # run normalisation and Dim reduction
@@ -1344,7 +1344,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       rownames(kpmp.sptl_29.10282.seur@assays$Spatial) %in% c("WT1", "NPHS1", "NPHS2"),])
     
     ### download barcode with coordinates from loupe browser
-    coord.df <- read.csv(header = T, row.names=1, sep = ",","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/lowres.KPMP/Spatial-Projection.csv")
+    coord.df <- read.csv(header = T, row.names=1, sep = ",","/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/lowres.KPMP/Spatial-Projection.csv")
     coord.df <- coord.df[colnames(kpmp.sptl_29.10282.seur),]
     colnames(coord.df) <- c("imagerow" ,"imagecol")
     kpmp.sptl_29.10282.seur@images$image =  new(
@@ -1354,7 +1354,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
       coordinates = coord.df
     )
     # add recent glom annotation by Martin
-    glom.annot <- read.table(header = T, row.names=1, sep = ",","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/Gloms_V2_15-11-23.csv")
+    glom.annot <- read.table(header = T, row.names=1, sep = ",","/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/Gloms_V2_15-11-23.csv")
     kpmp.sptl_29.10282.seur$glom.annot <- glom.annot$Gloms[ match( 
       colnames(kpmp.sptl_29.10282.seur), rownames(glom.annot) )]
     kpmp.sptl_29.10282.seur$glom.annot <- ifelse( kpmp.sptl_29.10282.seur$glom.annot=="",NA,kpmp.sptl_29.10282.seur$glom.annot)
@@ -1397,7 +1397,7 @@ barplot(Podo.frac, main="fraction of annotated podocytes")
     
     kpmp.sptl_29.10282.seur@meta.data$glomType <-  stringr::str_sub(  kpmp.sptl_29.10282.seur@meta.data$glom.annot, end = -2)
     
-    saveRDS(kpmp.sptl_29.10282.seur, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/kpmp.sptl_29.10282.seur.rda")
+    saveRDS(kpmp.sptl_29.10282.seur, file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/kpmp.sptl_29.10282.seur.rda")
     
      # boxplots
      ggplot(kpmp.sptl_29.10282.seur@meta.data, 

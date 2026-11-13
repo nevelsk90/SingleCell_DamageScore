@@ -13,7 +13,7 @@ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/Sh
 source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")  
 
 # load damage signatures
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 
 
 ### top 42 markers
@@ -204,7 +204,7 @@ downn <- c( toupper( downn ) ,
   # p2  <- enrichplot::emapplot_cluster(enrichplot::pairwise_termsim(
   #   DS.42_cProfiler$REACT.enrich), color = "pvalue", cex_label_group=1.2)
   # cowplot::plot_grid( plotlist =  list(p1,p2), nrow = 1, labels = c("GO","REACT"))
-  pdf(height = 4, width = 6, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/DS.42_cProfiler_GOclustered")
+  pdf(height = 4, width = 6, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/DS.42_cProfiler_GOclustered")
   print(gg)
   dev.off()
   

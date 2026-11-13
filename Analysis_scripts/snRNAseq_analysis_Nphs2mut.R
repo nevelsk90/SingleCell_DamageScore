@@ -122,7 +122,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
     sce.decontX.Seurat$nCount.log_RNA <- log(sce.decontX.Seurat$nCount_RNA)
     
     # add metadata    
-    annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+    annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
    
     sce.raw.Seurat$sample <- sub( "_.*" , "" , colnames(sce.raw.Seurat))
     sce.decontX.Seurat$sample <- sub( "_.*" , "" , colnames(sce.decontX.Seurat))
@@ -205,7 +205,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   sce.decontX.Seurat$sample <- sub( "_.*" , "" , colnames(sce.decontX.Seurat))
   
   # add metadata    
-  annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+  annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
   
   sce.decontX.Seurat$age <- annot_tab$Age_weeks[match( sce.decontX.Seurat$sample, annot_tab$CCG_Sample_ID)]
   sce.decontX.Seurat$gtype <- annot_tab$Genotype[match( sce.decontX.Seurat$sample, annot_tab$CCG_Sample_ID)]
@@ -213,7 +213,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   
   # save
   saveRDS( sce.decontX.Seurat ,
-           file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_rawSeur.Rdata")
+           file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_rawSeur.Rdata")
   
   
   
@@ -222,7 +222,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
 
 #### do the Dim reduction and clustering ####
   {
-    sce.decontX.Seurat <- readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_rawSeur.Rdata" )
+    sce.decontX.Seurat <- readRDS( file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_rawSeur.Rdata" )
     
     ### find variable features
     sce.decontX.Seurat <- NormalizeData( sce.decontX.Seurat )
@@ -249,7 +249,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
     sce.decontX.Seurat <- RunUMAP(sce.decontX.Seurat, dims = 1:20 )
     
     saveRDS( sce.decontX.Seurat,
-          file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_Seur.Rdata")
+          file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_Seur.Rdata")
     
     
     
@@ -294,7 +294,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
 
     # save
     saveRDS( sce_scExp@colData ,
-             file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_scDblFinder.rda")
+             file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_scDblFinder.rda")
 
 # 
     ### plot doublet Finder
@@ -343,7 +343,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   sce.decontX.Seurat.filt <- RunUMAP(sce.decontX.Seurat.filt, dims = 1:20 )
   
   saveRDS( sce.decontX.Seurat.filt,
-           file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
+           file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
   
   
   
@@ -388,7 +388,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   # try NGCSC clustering 
   {
     
-    sce_subs <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDSlist_23.12.2022.rda")[[1]]
+    sce_subs <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDSlist_23.12.2022.rda")[[1]]
     sce_subs$PDS.42.005 <- listSCSN.PDS[[1]]$PDS.42.005[ match( colnames(sce_subs) , colnames(listSCSN.PDS[[1]] ))]
     
     library(dplyr)
@@ -417,7 +417,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
                            metadata_column_name = "Wt1", suggest_cut =T )
     
     sce_subs[["NGCS_clustering"]] <- NGCS_out$nodes_selected$cells_NonGlobalClustering$id 
-    saveRDS(sce_subs , file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/nphs2.Podo.NGCS.rda")
+    saveRDS(sce_subs , file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/nphs2.Podo.NGCS.rda")
     NGCS::NGCS(sce_subs@meta.data, prefix = "RNA_snn",
                metadata_column_name = "PDS.42.005",suggest_cut = T, no_labels=T )
     
@@ -484,16 +484,16 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
     sce.decontX_subsMarks <- FindAllMarkers( sce_subs  )
     
     saveRDS( sce.decontX_subsMarks , 
-             file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/snRNAseq.Nphs2m_decontX.allcells.scDblFilt_clustMarks.rda")
+             file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/snRNAseq.Nphs2m_decontX.allcells.scDblFilt_clustMarks.rda")
     
-    sce.decontX_subsMarks <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/snRNAseq.Nphs2mut_decontX.allcells.scDblFilt_clustMarks.rda")
+    sce.decontX_subsMarks <- readRDS( "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/snRNAseq.Nphs2mut_decontX.allcells.scDblFilt_clustMarks.rda")
   
   # ### select podocytes
   # sce.decontX_Podo <- subset( top3lfcpval.decontX , idents= c(2,3) )
   # 
   # 
   # saveRDS( sce.decontX_Podo ,
-  #          file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells_Seur_podo.rda" )
+  #          file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells_Seur_podo.rda" )
   
   ### heatmap of markers with dotplot
   # select top 3 per cluster: first select more and then remove non-unique
@@ -541,7 +541,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   
   
   ### relate cluster markers with cell-tpe marks
-  sce.decontX_subsMarks <- readRDS(file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/snRNAseq.Nphs2mut_decontX.allcells.scDblFilt_clustMarks.rda" )
+  sce.decontX_subsMarks <- readRDS(file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/snRNAseq.Nphs2mut_decontX.allcells.scDblFilt_clustMarks.rda" )
 
   
   nphs2_clustCtype.gsea <- lapply( levels(sce.decontX_subsMarks$cluster),
@@ -588,9 +588,9 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
                              cluster_rows = F,
                              fontsize = 16)
   
-  pdf( width =  8 , height = 6 , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/ctypeAnalysis/KFO.snRNAseq.nphs2m_gsea_ctypeVSclstr.heatmap.pdf")
+  pdf( width =  8 , height = 6 , file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/ctypeAnalysis/KFO.snRNAseq.nphs2m_gsea_ctypeVSclstr.heatmap.pdf")
   a<-dev.cur()
-  png( width =  700 , height = 500 , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/ctypeAnalysis//KFO.snRNAseq.nphs2m_gsea_ctypeVSclstr.heatmap.png")
+  png( width =  700 , height = 500 , file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/ctypeAnalysis//KFO.snRNAseq.nphs2m_gsea_ctypeVSclstr.heatmap.png")
   dev.control("enable")
   print(gg0)
   
@@ -606,7 +606,7 @@ lldir <- list.dirs(  "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAs
   nphs2_seu@meta.data$ctype <- ctypes[ match( nphs2_seu@meta.data$seurat_clusters ,
                                               names(ctypes))]
   
-  saveRDS( nphs2_seu , "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
+  saveRDS( nphs2_seu , "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
   
   
   
@@ -622,9 +622,9 @@ gg4 <- FeaturePlot( nphs2_seu,  features = "Wt1" )
 
 ggll <-  cowplot::plot_grid(plotlist = list(gg1, gg2, gg3,gg4),nrow = 2)
 
-pdf( width =  12 , height = 10 , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/KFO.snRNAseq.Nphs2m_UMAPs.pdf")
+pdf( width =  12 , height = 10 , file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/KFO.snRNAseq.Nphs2m_UMAPs.pdf")
 a<-dev.cur()
-png( width =  1000 , height = 800 , file="/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/KFO.snRNAseq.Nphs2m_UMAPs.png")
+png( width =  1000 , height = 800 , file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/KFO.snRNAseq.Nphs2m_UMAPs.png")
 dev.control("enable")
 print(ggll)
 
@@ -635,9 +635,9 @@ dev.off()
 
 
 #### DE and trajectory for podoytes ####
-setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/Pseudotime")
+setwd("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/Pseudotime")
 # load podocytes
-nphs2_seu <-  readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
+nphs2_seu <-  readRDS( file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
 sce_clust_SCE <- subset( nphs2_seu , subset=gtype=="Nphs2" & ctype="Pod")
 set.seed(42)
 Idents(sce_clust_SCE)<- sce_clust_SCE$sample
@@ -658,7 +658,7 @@ mnn.pseudo <- rowMeans(pseudo.all$ordering, na.rm=TRUE)
 # sce_clust_SCE <- sce_clust_SCE[sample(sce_clust_SCE, size = 1930, replace = F )
 
 # save 
-setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/Pseudotime/")
+setwd("/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/Pseudotime/")
 # suffle cell number 
 pdf( width =  10 , height = 5 , file="KFO.snRNAseq.Nphs2mut_clstMrk_htmpDtplt.pdf")
 a<-dev.cur()
@@ -721,7 +721,7 @@ dev.off()
 
 ### DE analysis of the progression with DEseq2
   {
-    ress <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/RNAseq/snRNAseq_Nphs2/Pseudotime/Nphs2mut_snRNAseq_DEseq2.LRT.prog.rda")
+    ress <- readRDS( file="/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD_nonWD/Pseudotime/Nphs2mut_snRNAseq_DEseq2.LRT.prog.rda")
     
     ### volcanoplot
     toPlot <- as.data.frame(ress[!is.na(ress$pvalue) & ress$log2FoldChange!=0,])
@@ -930,15 +930,15 @@ dev.off()
 
 #### calculate and plot PDS ####
   {
-    source("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/cell-damage-score/AUCell_script.r")
+    source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
     
     ##  load Damage signature
     DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/CrossValidation/platforms/DamageSignatures/DS_all.02.06.2022.tsv")
     
     # all Nphs2 data
-    sce.decontX.Seurat.filt <- readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
+    sce.decontX.Seurat.filt <- readRDS( file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/Nphs2mut_decontX.allcells_Seur.scDblFilt.rda")
     # load podocyte data
-    sce.decontX_Podo <-  readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
+    sce.decontX_Podo <-  readRDS( file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
     
     
     ### select podocytes
@@ -957,7 +957,7 @@ dev.off()
    
 
       sce.decontX_Podo.sub$PDS.42.005 <- sce.raw.PDS.005
-      # saveRDS( sce.decontX_Podo , file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
+      # saveRDS( sce.decontX_Podo , file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
       
       
     # ### plot distributions 
@@ -1003,7 +1003,7 @@ dev.off()
     ### correlation betwen PDS and proteinuria
      {
        library(ggpubr)
-       annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+       annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
        annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
        
        
@@ -1063,7 +1063,7 @@ dev.off()
 #### DE and trajectory analysis for all clusters ####
   {
   ### load subsampled data, no doublets removal
-    sce.decontX_Podo <-  readRDS( file = "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/snRNAseq_Nphs2/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
+    sce.decontX_Podo <-  readRDS( file = "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/11_Nphs2mut/from_WD/Seurat/decontX.allcells.scDblFind_Seur_podo.rda")
     
   kidney_Nphs2mut_Seurat$Cell_Type <- factor( kidney_Nphs2mut_Seurat$seurat_clusters, levels = levels(Idents(kidney_Nphs2mut_Seurat)), 
                                               labels = c("endothelium","mesangium","podocytes","proximal tubules",

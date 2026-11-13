@@ -28,20 +28,20 @@ library( RColorBrewer )
 
 # setwd
 setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure3")
-# inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+# inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
 source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc.r")  
 
 # load damage signatures
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 # podocyte expr.genes
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 ## load expression data
-listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
-listSCSN <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda")
+listSCSN.1K.sampl <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+listSCSN <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDS_22.12.23.rda")
 
 ## pathway info
 keggPath_pathlist <- readRDS("/media/tim_nevelsk/WD_tim/ANNOTATIONS/Pathways/kegg_pathsList_gName.07.09.23.rda")
@@ -49,8 +49,8 @@ reactPath_pathlist <- readRDS("/media/tim_nevelsk/WD_tim/ANNOTATIONS/Pathways/re
 
 ### load the data and functions
 ### load AUCell score
-# listSCSN.1K.sampl_PAaucell <- readRDS( file= "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PathwayActivity/listSCSN.PDS_1K_PAaucell.29.09.2023rda")
-listSCSN.1K.sampl_PAaucell <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN.PDS_samples.1K_PAaucell.13.05.24.rda")
+# listSCSN.1K.sampl_PAaucell <- readRDS( file= "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/PathwayActivity/listSCSN.PDS_1K_PAaucell.29.09.2023rda")
+listSCSN.1K.sampl_PAaucell <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN.PDS_samples.1K_PAaucell.13.05.24.rda")
 
 # separate pathways by database pathways
 listSCSN.PDS_1K_PAaucell.kegg <- lapply(listSCSN.1K.sampl_PAaucell, "[[", 1)
@@ -356,7 +356,7 @@ PAdotHeatPlot <- function( cells="all",
     {
     ### compute number of cells within low/mid/high PDS per window
     KFOannot <- read.table( sep="\t", header = T,
-                            "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+                            "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
     
     samplTag <- c("BDP","AKK","BWV|CDC")
     
@@ -530,8 +530,8 @@ PAdotHeatPlot <- function( cells="all",
     
   ### select top or common Paths
   {
-    PAaucell.react_vs_PDS <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PathwayActivity/Multi.pathways/PAaucell.react_vs_PDSrank.gtypeAgg.rda")
-    PAaucell.kegg_vs_PDS <- readRDS("/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/PathwayActivity/Multi.pathways/PAaucell.kegg_vs_PDSrank.gtypeAgg.rda")
+    PAaucell.react_vs_PDS <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/PathwayActivity/Multi.pathways/PAaucell.react_vs_PDSrank.gtypeAgg.rda")
+    PAaucell.kegg_vs_PDS <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/PathwayActivity/Multi.pathways/PAaucell.kegg_vs_PDSrank.gtypeAgg.rda")
     
     N <- 5
     PAaucell.react_topN.KFO <- Reduce( union, apply(
@@ -704,7 +704,7 @@ PAdotHeatPlot <- function( cells="all",
 ### combine corr tables with network info to visualise for cytoscape 
 { 
   ### data to plot on Net
-  genecorrPDS.Sprmn_r.cntrd <- read( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
+  genecorrPDS.Sprmn_r.cntrd <- read( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_genecorrPDS_Sprmn.r.cntrd.rda")
   
   toPlot.all <- genecorrPDS.Sprmn_r.cntrd
   # combine all controls and all exprmnt in indiv. columns
@@ -715,7 +715,7 @@ PAdotHeatPlot <- function( cells="all",
                              "Btbr","Cd2ap","doxo","nephr.day5")
   
   ### load network information
-  Net <- read.table(sep = "\t", header = T, file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/pathway_viz/cytoscapeVIZ/Podo_areas/C.shell/FAnet.tsv")
+  Net <- read.table(sep = "\t", header = T, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/pathway_viz/cytoscapeVIZ/Podo_areas/C.shell/FAnet.tsv")
   Net.nodes <- unique( union(Net$Symbol, Net$Interactors))
   Net.nodes <- Net.nodes[Net.nodes!="" & !is.na(Net.nodes)]
   PDScorr <- toPlot.all[ match( Net.nodes , rownames(toPlot.all) ) ,  ]

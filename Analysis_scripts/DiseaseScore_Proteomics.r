@@ -20,7 +20,7 @@ source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/Sh
 ### load kegg paths
 keggPath_pathlist <- readRDS( "/media/tim_nevelsk/WD_tim/ANNOTATIONS/Pathways/kegg_pathsList_gName.07.09.23.rda")
 # podocyte genes
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 
 #### process proteomics data ####
@@ -29,7 +29,7 @@ filt.thrsh <- 0.49
 {
   library(tidyverse)
   
-  BSproteome_data <- readr::read_tsv("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/PROTEOME/PXD047417_Nephrin-Ab-Proteome_Report_Protein_Quant.tsv")
+  BSproteome_data <- readr::read_tsv("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_PROTEOME/PXD047417_Nephrin-Ab-Proteome_Report_Protein_Quant.tsv")
   
   # Create a new column that uniquely identifies each sample. 
   # This could be built from R.FileName or a combination of R.Condition and R.Replicate.
@@ -111,10 +111,10 @@ filt.thrsh <- 0.49
                                  "PLA2R.MN" )
 
   ## read the data
-  proteome_data1 <- readxl::read_excel("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/PROTEOME/PXD054062_Report_unique_genes_NEFR1028_DIA.xlsx", sheet = 1)
+  proteome_data1 <- readxl::read_excel("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_PROTEOME/PXD054062_Report_unique_genes_NEFR1028_DIA.xlsx", sheet = 1)
   colnames(proteome_data1) <- gsub( "D:|\\\\NEFR\\\\|.raw|\\\\", "", colnames(proteome_data1))
   
-  proteome_data2 <- readxl::read_excel("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/PROTEOME/PXD054062_Report_unique_genes_NEFR849_DIA.xlsx", sheet = 1)
+  proteome_data2 <- readxl::read_excel("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_PROTEOME/PXD054062_Report_unique_genes_NEFR849_DIA.xlsx", sheet = 1)
   colnames(proteome_data2) <- sub( "_2022.*", "", 
                                    gsub( "X:\\\\Didier\\\\Data\\\\NEFR\\\\|.raw|_2022.*|_DIA", "", 
                                          colnames(proteome_data2)) )
@@ -171,7 +171,7 @@ filt.thrsh <- 0.49
   library(mzID)
   
   # Read and parse the mzIdentML file (automatically handles gzip files)
-  mzidData <- mzID("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/PROTEOME/NEFR738_all_LFQ_Paper.mzid.gz")
+  mzidData <- mzID("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_PROTEOME/NEFR738_all_LFQ_Paper.mzid.gz")
   psmData <- flatten(mzidData)
   
   # Inspect the PSM-level data (peptide spectrum matches)
@@ -218,7 +218,7 @@ filt.thrsh <- 0.49
 ### read MaxQuant, KFO
 {
   ll <- list.files( pattern = "proteinGroups", full.names = T , 
-                    path = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
+                    path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
   
   podoGlom_proteome.raw <- lapply( ll , read.csv, header = TRUE,
                                    stringsAsFactors = FALSE, sep = "\t")
@@ -244,7 +244,7 @@ filt.thrsh <- 0.49
   
   # Generate a SummarizedExperiment object using an experimental design
   ll.meta <- list.files( pattern = "experimental_design", full.names = T , 
-                         path = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
+                         path = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/data/")
   
   # creating se objects
   podoGlom_proteome_se <- lapply(seq(podoGlom_proteome), function( ii )
@@ -290,7 +290,7 @@ filt.thrsh <- 0.49
 
 
 #### check expression of Oxphos and Glycolisis genes ####
-podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/PROTEOME/Prot.Glom.datt_.rda")
+podoGlom_proteome_filt <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/WD_PROTEOME/Prot.Glom.datt_.rda")
 
 ### select gene and protein names 
   {
@@ -328,7 +328,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
   
   ### transcript lvls 
   {
-    listSCSN.1K.sampl <- readRDS( "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+    listSCSN.1K.sampl <- readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
     
     GlyOxph.pathMean <- lapply( seq(listSCSN.1K.sampl), function(ii)
     {
@@ -483,7 +483,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
       theme(text=element_text(size=20 ), axis.text.y = element_text(size=14 )) +
       guides(color = guide_legend(override.aes = list(size=5)))
     
-    pdf( height = 4, width = 8, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/figures/NewGlyPhos_protein.lvl.pdf")
+    pdf( height = 4, width = 8, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/figures/NewGlyPhos_protein.lvl.pdf")
     print(ggl)
     dev.off()
     
@@ -510,7 +510,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
             axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
       guides(color = guide_legend(override.aes = list(size=5)))
     
-    pdf( height = 8, width = 8, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/figures/DPP4.Expr_protein.lvl.pdf")
+    pdf( height = 8, width = 8, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/figures/DPP4.Expr_protein.lvl.pdf")
     print(ggl2)
     dev.off()
     
@@ -536,7 +536,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
       ) + 
       guides(color = guide_legend(override.aes = list(size=5)))
     
-    pdf( height = 8, width = 8, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/figures/Circ.TF.Expr_protein.lvl_PXD047417.pdf")
+    pdf( height = 8, width = 8, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/figures/Circ.TF.Expr_protein.lvl_PXD047417.pdf")
     print(ggl3)
     dev.off()
     
@@ -622,7 +622,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
       facet_wrap(vars(study), scales = "free")+
       theme( text = element_text( size=20))+ ggtitle("protein DE in Nphs2mut.")
     
-    pdf( height = 24, width = 24, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/figures/GlyPhos.newMarks_protein.DE_M.H.pdf")
+    pdf( height = 24, width = 24, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/figures/GlyPhos.newMarks_protein.DE_M.H.pdf")
     print(gg2)
     dev.off()
     
@@ -642,7 +642,7 @@ podoGlom_proteome_filt <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/
 #### apply PDS to proteomics ####
 MtoH <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/DSpodo_musTOhomo_oneTOone.tsv")
 
-DS_all <- read.table( header = T, "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 DS_all$gene_symbol <- MtoH$Mouse_Symbol
 DS_all.PROT <- DS_all
 DS_all.PROT$gene_symbol <- toupper(DS_all.PROT$gene_symbol)
@@ -717,6 +717,6 @@ ggl <- lapply( seq( unique(PDS_prot$study)), function(ii){
 # dev.off()
 # dev.off()
 
-pdf( height = 15, width = 12, file = "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_charachterise/ProteinExpr/figures/PDS.protein.test.Updt.pdf")
+pdf( height = 15, width = 12, file = "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_charachterise/ProteinExpr/figures/PDS.protein.test.Updt.pdf")
 print(cowplot::plot_grid(plotlist = ggl[c(3,3,1,2,4,5,6,7)], ncol = 2) )
 dev.off()

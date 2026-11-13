@@ -26,7 +26,7 @@ library( RColorBrewer )
 
 # setwd
 setwd("/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure2")
-inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
@@ -34,21 +34,21 @@ source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc
 
 
 # load damage signatures
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 # convert gene names to human orthologs
 DS.HOMO <-  fun_homoTO.FROMmouse( gns = DS_all$gene_symbol, TO = F )
 DS_all.HOMO <-  DS_all
 DS_all.HOMO$HOMO <- unlist(DS.HOMO$HOMO)
 # load scsn podo genes
-allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
+allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/PDS_pseudotime/SCSN_allPodoGenes.rda")
 
 #### 1. panel A. functional validation with mouse data #### 
 ### PDS vs Proteinura in KFO snRNAseq datasets
   {
-     listSCSN.1K.sampl <- readRDS("/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
+     listSCSN.1K.sampl <- readRDS("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listSCSN_samples.1K.22.12.23.rda")
 
     # laod annotation
-    annot_tab <- read.table(sep = "\t",header = T, "/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/Sample_Names_KFO.csv")
+    annot_tab <- read.table(sep = "\t",header = T, "/cellfile/PROJECTS/podocyte_snRNAseq_models/bulk_sn_de_integration_TimPadvitski/Output/04_integrateDE_bulk.snRNAseq/thesis_WD_RNAseq_loose/Sample_Names_KFO.csv")
     annot_tab$group <- paste(annot_tab$Genotype,annot_tab$Age_weeks,sep = "_")
     
     # combine metadata from 3 experiments 
@@ -121,11 +121,11 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
              "GSE110092" ,"GSE77717" , "KFO.Wt1"   )
   
   # read stage data
-  annot_bulkStage <- readRDS(file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
+  annot_bulkStage <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/Disease_stages/annot_bulkStage.rda")
   # read proteinuria data
-  mgmg.Bulk <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/mgmg.Bulk.rda")
+  mgmg.Bulk <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/PDSvsProtoneuria/bulk/mgmg.Bulk.rda")
   # read bulk expression data PDS
-  explist <- readRDS(  file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/RNAseq/public/PDS/explist_44.ma.bulk.sc.rda")
+  explist <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/preprocessing/PDS_validation_mouse/explist_44.ma.bulk.sc.rda")
   # select studies
   blkData <- explist[ names(explist) %in% stud]
   
@@ -206,7 +206,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
     {
       # load precomputed data, filtered for CKD and AKI samples with at least 3 podocytes
       library(corrplot)
-      toPlot.filt <-readRDS( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/HumanValidation/KPMP.CKD.AKI_scsnRNAseq_podo.PDS.aggregated.rda")
+      toPlot.filt <-readRDS( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/HumanValidation/KPMP.CKD.AKI_scsnRNAseq_podo.PDS.aggregated.rda")
       
       toPlot.filt.red <- toPlot.filt[,c("PDS" ,"Age", "Sex", "Race", "Diabetes.Duration..Years.",
                                         "Hypertension.Duration..Years.", "eGFR.CrCys",
@@ -350,7 +350,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
 ### visualise PDS in the highQ histo-image from KPMP patient 29.10282 
   
   # load Seurat object with annotated gloms
-  kpmp.sptl_29.10282.seur <- readRDS( file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/kpmp.sptl_29.10282.seur.rda")
+  kpmp.sptl_29.10282.seur <- readRDS( file="/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/kpmp.sptl_29.10282.seur.rda")
   
   ### Spatial plot, PDS visualised 
     {
@@ -359,7 +359,7 @@ allPodoGenes <- readRDS( file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/
   
       
       ### download barcode with coordinates from loupe browser
-      coord.df <- read.csv(header = T, row.names=1, sep = ",","/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/Spatial.Transcr/KPMP/29-10282/lowres.KPMP/Spatial-Projection.csv")
+      coord.df <- read.csv(header = T, row.names=1, sep = ",","/cellfile/DATASETS/Human/Kidney/Multi_omics/Public/KPMP/Data/from_WD_2026-10/29-10282/lowres.KPMP/Spatial-Projection.csv")
       coord.df <- coord.df[colnames(kpmp.sptl_29.10282.seur),]
       colnames(coord.df) <- c("imagerow" ,"imagecol")
       kpmp.sptl_29.10282.seur@images$image =  new(

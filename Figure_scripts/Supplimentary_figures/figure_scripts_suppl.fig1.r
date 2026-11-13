@@ -22,7 +22,7 @@ library( RColorBrewer )
 
 # setwd
 setwd( "/home/tim_nevelsk/PROJECTS/PODOCYTE/WRITING/PDS_manuscript/Figures/Figure1" )
-inputdir <-  "/media/tim_nevelsk/WD_tim/PROJECTS/WRITING/PDS_manuscript/Figure_input" 
+inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/WRITING/PDS_manuscript/Figure_input" 
 
 # load necessary code
 source("https://raw.githubusercontent.com/PauUng/HepatocyteDamageScore/master/SharedFunctions.R")
@@ -30,7 +30,7 @@ source("https://raw.githubusercontent.com/nevelsk90/R_scripts/master/usefulRfunc
 
 
 # load damage signatures
-DS_all <- read.table( header = T,  file="/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
+DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
 # load expression data
 listSCSN.1K <- readRDS( paste0( inputdir, "/listSCSN_1K.22.12.23.rda") )
 
@@ -108,8 +108,8 @@ listSCSN.1K <- readRDS( paste0( inputdir, "/listSCSN_1K.22.12.23.rda") )
                                        newSeu@meta.data <- cbind(newSeu@meta.data, t(DSsizeTest))
                                        return(newSeu)
                                      })
-  # saveRDS(listSCSN.PDS_DSsizeTest, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.rda")
-  # saveRDS(listSCSN.PDS_DSsizeTest, file="/media/tim_nevelsk/WD_tim/PROJECTS/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS_DSsizeTest.rda")
+  # saveRDS(listSCSN.PDS_DSsizeTest, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS42_DSsizeTest.rda")
+  # saveRDS(listSCSN.PDS_DSsizeTest, file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/Dev.Valid/listSCSN.PDS_DSsizeTest.rda")
   
   ### plot PDS distributions
   {
@@ -178,7 +178,7 @@ listSCSN.1K <- readRDS( paste0( inputdir, "/listSCSN_1K.22.12.23.rda") )
     
     
     # save plots for 2 groups, used for DE
-    pdf(height = 6, width = 12, file =  paste( "/home/tim_nevelsk/PROJECTS/PODOCYTE/DiseaseScore/Development_Validation/SetSize/",
+    pdf(height = 6, width = 12, file =  paste( "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/Development_Validation/SetSize/",
                                                "PDS_sizeTest_scsn.VlnPlot.pdf", sep = "") )
     print(ppg1)
     dev.off()
