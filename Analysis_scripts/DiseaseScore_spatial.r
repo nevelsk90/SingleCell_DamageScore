@@ -8,7 +8,7 @@ library(RColorBrewer)
 library(ggeasy)
 # F to calculate damage score
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
-source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
+source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r")
 
 # release memory
 mallinfo::mallinfo()

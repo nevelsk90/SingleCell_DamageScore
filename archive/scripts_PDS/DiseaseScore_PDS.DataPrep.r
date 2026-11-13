@@ -26,8 +26,8 @@ tx2prot <-  getBM( attributes=c("uniprotswissprot","uniprot_gn_id", 'external_ge
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/Universal_Damage_Signature_Tim_Paula_Version.R")
 # calculate damage score
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Code/archive/scripts_PDS/AUCell_script.r")
-source("/media/tpadvits/WD_tim/PROJECTS/myCode/usefulRfunc.r")
-source( "/media/tpadvits/WD_tim/PROJECTS/myCode/TFA.estimate_functions.r")
+source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r")
+source( "/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/TFA.estimate_functions.r")
 
 setwd("/data/user/tpadvits/PROJECTS/PDS")
 DS_all <- read.table( header = T, "DS_all.20.09.2023.tsv")
@@ -38,11 +38,11 @@ DS_all <- read.table( header = T, "DS_all.20.09.2023.tsv")
                 "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/10_Wt1hetdel/from_WD/Seurat/decontX.allcells_Seur_podo.rda",
                 "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/14_Cem/from_WD/Seurat/decontX.allcells_Seur_podo.pdss2.rda" ,
                 "/cellfile/PROJECTS/podocyte_snRNAseq_models/snrnaseq_processing_TimPadvitski/Output/12_Lmx1b/from_WD/Seurat/decontX.allcells_Seur_podo.rda",
-                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.btbr.rda",
-                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.cd2ap.rda",
-                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.doxo.rda",
-                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.nephritD1.rda",
-                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.nephritD5.rda")
+                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.btbr.rda",
+                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.cd2ap.rda",
+                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.doxo.rda",
+                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.nephritD1.rda",
+                "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.nephritD5.rda")
     listSCSN <- lapply(seq(listPodo), function(ii){
     datt <- readRDS(listPodo[ii])
   })

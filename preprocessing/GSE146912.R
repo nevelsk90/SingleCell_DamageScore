@@ -12,12 +12,12 @@ library(SingleCellExperiment)
 library(matrixStats)
 
 
-source( "/media/tpadvits/WD_tim/PROJECTS/myCode/Read10X_STAR.r" )
-source( "/media/tpadvits/WD_tim/PROJECTS/myCode/usefulRfunc.r" )
+source( "/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/Read10X_STAR.r" )
+source( "/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r" )
 
 # select 14 podocyte samples
 lmat <- list.files(full.names = T , pattern = ".txt.gz" , 
-                   "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/GSE146912_raw_counts", recursive = F)
+                   "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/raw_tabs/GSE146912_raw_counts", recursive = F)
 PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl","Ptpro","Magi2","Podxl")
 
 #### removal of ambient RNA , DecontX ####
@@ -110,7 +110,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   sce.decontX.Seurat <- PercentageFeatureSet(sce.decontX.Seurat, "^Rp[sl]", col.name = "percent_ribo")
   
   # add metadata   
-  annot_tab <- read.table(sep ="," ,header=T, "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/SraRunTable.txt")
+  annot_tab <- read.table(sep ="," ,header=T, "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Metadata/SraRunTable.txt")
   # sce.raw.Seurat$age <- annot_tab$Age_weeks[match( sub("SID","", sce.raw.Seurat$sample), annot_tab$CCG_Sample_ID)]
   # sce.raw.Seurat$gtype <- annot_tab$Genotype[match( sub("SID","", sce.raw.Seurat$sample), annot_tab$CCG_Sample_ID)]
   # sce.raw.Seurat$group <- paste( sce.raw.Seurat$gtype, sce.raw.Seurat$age , sep = "_")
@@ -157,8 +157,8 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
 
 #### read raw count matrices, create a seurat obj, select podocytes ####  
 {
-  ll.rawC <- list.files( full.names = T, pattern = "raw.sparseM.rda" , path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/GSE146912_raw_counts")
-  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/SraRunTable.txt")
+  ll.rawC <- list.files( full.names = T, pattern = "raw.sparseM.rda" , path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/raw_tabs/GSE146912_raw_counts")
+  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Metadata/SraRunTable.txt")
   
   
   # create Seurat objects
@@ -195,7 +195,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   VlnPlot(seur,features = "percent.mt", group.by="geoID")
   VlnPlot(seur,features = "nFeature_RNA", group.by="geoID")
   seur <- subset(seur, subset=percent.mt < 10 )
-  saveRDS( seur, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_allcells_rawSeur.rda") 
+  saveRDS( seur, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_allcells_rawSeur.rda") 
   
   
   # cluster and Dimred
@@ -244,7 +244,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   # select podo by cluster
   seur.podo <- subset( seur, id=c(3,7))
   
-  saveRDS( seur.podo, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_podo_rawSeur.rda") 
+  saveRDS( seur.podo, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_podo_rawSeur.rda") 
   
   
   
@@ -252,8 +252,8 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
 
 #### read counts adjusted by decontX, create a seurat obj, select podocytes ####  
 {
-  ll.decontC <- list.files( full.names = T, pattern = "decontX.rda" , path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/GSE146912_raw_counts/decontX/")
-  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/SraRunTable.txt")
+  ll.decontC <- list.files( full.names = T, pattern = "decontX.rda" , path = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/raw_tabs/GSE146912_raw_counts/decontX/")
+  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Metadata/SraRunTable.txt")
   
   
   # create Seurat ll.decontC
@@ -290,7 +290,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   VlnPlot(seur,features = "percent.mt", group.by="geoID")
   VlnPlot(seur,features = "nFeature_RNA", group.by="geoID")
   seur <- subset(seur, subset=percent.mt < 10 )
-  saveRDS( seur, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_decontX.allcells_rawSeur.Rdata") 
+  saveRDS( seur, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_decontX.allcells_rawSeur.Rdata") 
   
   
   # cluster and Dimred
@@ -338,7 +338,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   # select podo by cluster
   seur.podo2 <- subset( seur, id=c(2,4))
   
-  saveRDS( seur.podo2, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_decontX.podo_rawSeur.rda") 
+  saveRDS( seur.podo2, file="/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_decontX.podo_rawSeur.rda") 
   
   
   
@@ -348,7 +348,7 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
 #### find markers, subset podocytes ####
 {
   sce.decontX.Seurat.filt <- readRDS(
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_decontX.allcells_Seur.scDblFilt.rda")
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_decontX.allcells_Seur.scDblFilt.rda")
   
   ### find markers
   sce.decontX_subsMarks <- FindAllMarkers( sce_subs )
@@ -365,37 +365,37 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   
   # save
   # saveRDS( sce.decontX_Podo ,
-  #           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.rda" )
-  sce.decontX_Podo <- readRDS( "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.rda")
+  #           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.rda" )
+  sce.decontX_Podo <- readRDS( "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.rda")
   sce.decontX_Podo <-  subset( sce.decontX_Podo , percent_mito <= 10 )
   
   # by experiments
   saveRDS(  subset( sce.decontX_Podo , subset=gtype=="Adriamycin_d10" ) ,
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.doxo.rda" )
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.doxo.rda" )
   saveRDS(  subset( sce.decontX_Podo , subset=gtype== "Nephritis_d5" )  ,
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.nephritD5.rda" )
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.nephritD5.rda" )
   saveRDS(  subset( sce.decontX_Podo , subset=gtype %in% c( "Normal" ,"Nephritis_d1" ))  ,
-            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.nephritD1.rda" )
+            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.nephritD1.rda" )
   saveRDS(  subset( sce.decontX_Podo , cells=which( sce.decontX_Podo$batch==3 ) ) ,
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.cd2ap.rda" )
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.cd2ap.rda" )
   saveRDS( subset( sce.decontX_Podo , cells=which( sce.decontX_Podo$batch==2 ) ) ,
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.btbr.rda" )
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.btbr.rda" )
   
   
   ### save raw podocytes ( no decontX)
-  sce_Podo <- readRDS("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_podo_rawSeur.rda")
+  sce_Podo <- readRDS("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_podo_rawSeur.rda")
   sce_Podo <-  subset( sce_Podo , subset=percent.mt <= 10 )
   
   saveRDS(  subset( sce_Podo , subset=gtype%in%"doxorubicin" ) ,
-            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/allcells_Seur_podo.doxo.rda" )
+            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/allcells_Seur_podo.doxo.rda" )
   saveRDS(  subset( sce_Podo , subset=gtype== "nephritis d5" )  ,
-            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/allcells_Seur_podo.nephritD5.rda" )
+            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/allcells_Seur_podo.nephritD5.rda" )
   saveRDS(  subset( sce_Podo , subset=gtype %in% c( "control" ,"nephritis d1" ))  ,
-            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/allcells_Seur_podo.nephritD1.rda" )
+            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/allcells_Seur_podo.nephritD1.rda" )
   saveRDS(  subset( sce_Podo , subset=gtype %in% c( "BTBR ob/+" ,"BTBR ob/ob" ) ) ,
-            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/allcells_Seur_podo.btbr.rda" )
+            file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/allcells_Seur_podo.btbr.rda" )
   saveRDS( subset( sce_Podo , subset=gtype %in% c( "CD2AP KO" ,"CD2AP WT" ) ) ,
-           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/allcells_Seur_podo.cd2ap.rda" )
+           file = "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/allcells_Seur_podo.cd2ap.rda" )
   
   }
 
@@ -407,15 +407,15 @@ PodoMarks.mouse <-  c( "Wt1", "Nphs1", "Nphs2", "Synpo","Robo2","Thsd7a","Nebl",
   DS_all <- read.table( header = T, "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.02.06.2022.tsv")
   
   # load podocyte data
-  sce.decontX_Podo <-  readRDS( "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/decontX.allcells_Seur_podo.rda"  )
+  sce.decontX_Podo <-  readRDS( "/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/decontX.allcells_Seur_podo.rda"  )
   sce.decontX_Podo <-  subset( sce.decontX_Podo , subset=percent_mito <= 10 )
   Idents(sce.decontX_Podo) <- "group" 
   sce.decontX_Podo <- subset( sce.decontX_Podo, downsample=1000)
   
   # no ambient removal
-  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/raw_tabs/SraRunTable.txt")
+  annot.tab <- read.csv("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Metadata/SraRunTable.txt")
   
-  sce_Podo <- readRDS("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/scRNA_PDSvalidation_GEO/Data/sc/GSE146912_scRNAseq/Seurat/GSE146912_podo_rawSeur.rda")
+  sce_Podo <- readRDS("/cellfile/DATASETS/Mouse/Kidney/Transcriptomics/Single_cell/Public/GSE146912_PDSvalidation/Data/processed/Seurat/GSE146912_podo_rawSeur.rda")
   sce_Podo <-  subset( sce_Podo , subset=percent.mt <= 10 )
   sce_Podo$age <- annot.tab$Age[ match(sce_Podo$geoID,  annot.tab$Sample.Name)]
   sce_Podo$group <- paste( sce_Podo$gtype, sce_Podo$age,sep = "_")

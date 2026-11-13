@@ -131,8 +131,8 @@ subset_coord <- data.frame( x= st_coordinates(poly_sf$drawn)[,1] ,
 
 
 ## crop custom to remove any tissue area, including molecules
-# http/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/crop_seurat_v1.R
-# alternatively use http/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/SeuratCropper.R ,
+# https://github.com/alikhuseynov/add-on_R/blob/develop/R/crop_seurat_v1.R
+# alternatively use https://github.com/scOpenLab/geojson_seurat_cropper/blob/main/SeuratCropper.R ,
 # with pyxel_size = 1 and change code object@images[[name]] -> object@images[["fov"]]
 xen_roi3 <-  Crop_custom( x=coords ,
                           object = xenium.obj,

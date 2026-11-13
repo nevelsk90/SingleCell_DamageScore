@@ -35,7 +35,7 @@ tx2gene <- getBM( attributes=c( 'ensembl_gene_id', 'external_gene_name',"entrezg
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/Universal_Damage_Signature_Tim_Paula_Version.R")
 # calculate damage score
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
-source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
+source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r")
 
 ### TF of interest 
 TFpodo.Nr <- c(  "Rora", "Nr2f2",

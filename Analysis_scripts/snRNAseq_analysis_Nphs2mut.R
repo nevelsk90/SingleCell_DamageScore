@@ -15,8 +15,8 @@ library(biomaRt)
 library(SingleCellExperiment)
 library(matrixStats)
 
-source("/home/tim_nevelsk/PROJECTS/myCode/Read10X_STAR.r")
-source( "/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
+source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/Read10X_STAR.r")
+source( "/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r")
 
 mart_mouse = useMart("ensembl",dataset="mmusculus_gene_ensembl", host="www.ensembl.org")
 egid2gname <- getBM(attributes=c('ensembl_gene_id', 'external_gene_name'),  mart = mart_mouse)
@@ -763,7 +763,7 @@ dev.off()
 #### perform GO and pathway annotation 
   {
   ### source functions and prepare annotations 
-  # source("/home/tim_nevelsk/PROJECTS/myCode/func_analysis.R")  
+  # source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/func_analysis.R")  
   pseudo <- readRDS(file="Nphs2mut_snRNAseq.DEtest.MSTpsdtime.rda")
   ### use Robert's function for GO analysis
   {

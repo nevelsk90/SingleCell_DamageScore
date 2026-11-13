@@ -35,7 +35,7 @@ inputdir <-  "/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitsk
 
 # load necessary code
 source("/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/cell-damage-score/AUCell_script.r")
-source("/home/tim_nevelsk/PROJECTS/myCode/usefulRfunc.r")
+source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/usefulRfunc.r")
 
 # load damage signatures
 DS_all <- read.table( header = T,  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTE_nonWD/DiseaseScore/DamageSignatures/DS_all.20.09.2023.tsv")
@@ -97,7 +97,7 @@ allPodoGenes <- readRDS( file="/cellfile/PROJECTS/damage_scores/podocyte_damage_
 {
   ### perform enrichment
   library(DBI)
-    source("/home/tim_nevelsk/PROJECTS/myCode/func_analysis.R")  
+    source("/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/func_analysis.R")  
   
 
   # perform enrichment

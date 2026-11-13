@@ -1196,7 +1196,7 @@ TF_MeanMed <- readRDS(  file="/cellfile/PROJECTS/damage_scores/podocyte_damage_s
 #### estimate pathway activities with AUCell ####
   {
     # prepare reactorme and kegg gsets
-    source( "/home/tim_nevelsk/PROJECTS/myCode/func_analysis.R")
+    source( "/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/func_analysis.R")
     library(GSEABase)
     keggPath_pathlist <- readRDS("/media/tim_nevelsk/WD_tim/ANNOTATIONS/Pathways/kegg_pathsList_gName.07.09.23.rda")
     reactPath_pathlist <- readRDS("/media/tim_nevelsk/WD_tim/ANNOTATIONS/Pathways/reactome_pathsList_gName.07.09.23.rda")

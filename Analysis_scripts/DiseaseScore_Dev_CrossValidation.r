@@ -2759,7 +2759,7 @@ datt <-  Reduce( rbind, lapply(seq(toPlot.list), function(ii){
       
      ### make vln plots 
       listKFO.podo_seur.PDS <- readRDS(file="/cellfile/PROJECTS/damage_scores/podocyte_damage_score_TimPadvitski/Output/00_legacy_unassigned/from_F/PODOCYTES/disease.score/listKFOseur.PDS.rda")
-      source('~/PROJECTS/myCode/stacked_vlnPlot_seurat.R')
+      source('/cellfile/datapublic/tpadvits/PROJECTS/utility.SCRIPTS/stacked_vlnPlot_seurat.R')
       
       # vln plots for individual genes
       # StackedVlnPlot( 
